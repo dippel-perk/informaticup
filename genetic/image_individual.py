@@ -1,7 +1,7 @@
 from classification import ImageClassification
 from PIL import Image
 from api import NeuralNetworkAPI
-from image_utilities import ImageUtilities
+from utils.image_utilities import ImageUtilities
 
 
 class ImageIndividual:
