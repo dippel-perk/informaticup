@@ -1,14 +1,12 @@
 from genetic.population_generator.population_generator import PopulationGenerator
-from api import NeuralNetworkAPI
 from utils.image_utilities import ImageUtilities
 from genetic.image_individual import ImageIndividual
 import random as rd
 
 class RandomPopulationGenerator(PopulationGenerator):
 
-    def __init__(self, api: NeuralNetworkAPI, size : int):
+    def __init__(self, size : int):
         super().__init__(size=size)
-        self.api = api
 
     def _generate_noise(self):
 
@@ -28,7 +26,7 @@ class RandomPopulationGenerator(PopulationGenerator):
 
     def __iter__(self):
         for i in range(self.size):
-            yield ImageIndividual(api=self.api, image=self._generate_noise())
+            yield ImageIndividual(image=self._generate_noise())
 
 """
 decison_val = rd.random()

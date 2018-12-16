@@ -1,16 +1,12 @@
 from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.image_individual import ImageIndividual
-from utils.image_utilities import ImageUtilities
-from random import randint, random, sample
-
+from typing import List
 
 class BasicApproach(GeneticAlgorithm):
 
-    def fitness(self, individual):
-        individual.classify()
-        return individual.classification.value_for_class(self.class_to_optimize)
-
-    def grade(self, population):
-        return max(self.fitness(x) for x in population)
+    def _grade(self, population: List[ImageIndividual] = None):
+        if not population:
+            population = self._get_current_population()
+        return max(self._fitness(x) for x in population)
 
 

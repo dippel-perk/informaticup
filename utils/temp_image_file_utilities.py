@@ -1,8 +1,9 @@
-from api import NeuralNetworkAPI
 import numpy as np
 import string
 import pathlib as pathlib
 import os.path
+
+from classifier.classifier import Classifier
 
 class TempImageFileUtilities:
 
@@ -39,5 +40,5 @@ class TempImageFileUtilities:
 
     @staticmethod
     def __add_prefix_to_file_name(file_name : string):
-        assert not file_name.endswith(NeuralNetworkAPI.DESIRED_IMAGE_EXTENSION)
-        return file_name + "." + NeuralNetworkAPI.DESIRED_IMAGE_EXTENSION
+        assert not file_name.endswith(Classifier.DESIRED_IMAGE_EXTENSION)
+        return file_name + "." + Classifier.DESIRED_IMAGE_EXTENSION

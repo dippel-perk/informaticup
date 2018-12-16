@@ -1,14 +1,11 @@
-import requests
 import time
+import requests
 
+from classifier.classifier import Classifier
+from classifier.classification import ImageClassification, Class
 
-from classification import ImageClassification, Class
+class OnlineClassifier(Classifier):
 
-class NeuralNetworkAPI():
-
-    DESIRED_IMAGE_EXTENSION = "PNG"
-    DESIRED_IMAGE_WIDTH = 64
-    DESIRED_IMAGE_HEIGHT = 64
     RATE_LIMIT_INTERVAL = 60
 
     __API_URL = 'https://phinau.de/trasi'
@@ -26,16 +23,16 @@ class NeuralNetworkAPI():
         self._counter += 1
 
         data = {
-            'key': NeuralNetworkAPI.__API_KEY
+            'key': OnlineClassifier.__API_KEY
         }
         files = {
             'image': open(file_name, 'rb')
         }
-        resp = requests.post(NeuralNetworkAPI.__API_URL, data=data, files=files)
+        resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
 
-        if resp.status_code == NeuralNetworkAPI.__API_RESPONSE_CODE_TOO_MANY_REQUESTS:
+        if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_TOO_MANY_REQUESTS:
             elapsed = time.time() - self._time_start
-            wait_time = NeuralNetworkAPI.RATE_LIMIT_INTERVAL - elapsed
+            wait_time = OnlineClassifier.RATE_LIMIT_INTERVAL - elapsed
             self._counter = 0
             print("[Warning] Too many requests, waiting {} seconds".format(wait_time))
             time.sleep(wait_time)
