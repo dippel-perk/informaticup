@@ -8,6 +8,10 @@ import string
 import random as rd
 
 class GeneticAlgorithm:
+    """
+    Base Class for a number of genetic algorithms. The class provides full functionality. All methods which can
+    be overwritten by potential sub classes do have an influence on the behaviour of the algorithm.
+    """
 
     def __init__(self, classifier: Classifier, class_to_optimize: string):
         self._class_to_optimize = class_to_optimize
