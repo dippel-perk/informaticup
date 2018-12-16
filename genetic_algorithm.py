@@ -71,7 +71,6 @@ class FirstApproach(GeneticAlgorithm):
 
         return individual
 
-
     def fitness(self, individual):
         individual.classify()
         return individual.classification.value_for_class(self.class_to_optimize)
@@ -80,7 +79,7 @@ class FirstApproach(GeneticAlgorithm):
         return max(self.fitness(x) for x in population)
 
     def evolve(self, population, retain=0.2, random_select=0.05, mutate=0.01):
-        graded = sorted(population, key = lambda x: self.fitness(x))
+        graded = sorted(population, key = lambda x: self.fitness(x), reverse=True)
 
         retain_length = int(len(graded)*retain)
         parents = graded[:retain_length]
@@ -114,14 +113,14 @@ class FirstApproach(GeneticAlgorithm):
 
 if __name__ == '__main__':
 
-    genetic = FirstApproach("Zulässige Höchstgeschwindigkeit (30)")
-    size = 10
+    genetic = FirstApproach("Einmalige Vorfahrt")
+    size = 20
     p = genetic.population(size)
 
     print(p)
 
     fitness_history = [genetic.grade(p),]
-    for i in range(6):
+    for i in range(10):
         print("------------------Grade: %f, Generation %s with %d individuals------------------" % (fitness_history[-1], str(i+1),len(p)))
         p = genetic.evolve(p, retain=0.2)
         fitness_history.append(genetic.grade(p))

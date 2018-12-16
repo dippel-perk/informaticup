@@ -1,6 +1,7 @@
 from api import NeuralNetworkAPI
 from PIL import Image
 import random as rd
+import numpy as np
 import string
 import pathlib as pathlib
 import os.path
@@ -19,7 +20,7 @@ class ImageUtilities:
 
     @staticmethod
     def generate_file_name():
-        return ''.join(rd.choices(string.ascii_letters + string.digits, k=ImageUtilities.FILE_NAME_LENGTH)) + "." + NeuralNetworkAPI.DESIRED_IMAGE_EXTENSION
+        return ''.join(np.random.choice(list(string.ascii_letters + string.digits), size=(ImageUtilities.FILE_NAME_LENGTH))) + "." + NeuralNetworkAPI.DESIRED_IMAGE_EXTENSION
 
     @staticmethod
     def get_empty_image():
@@ -49,7 +50,15 @@ class ImageUtilities:
         pixel_data = list()
 
         for i in range(pixel_count):
-            pixel_data.append((rd.randint(0,255),rd.randint(0,255), rd.randint(0,255)))
+            pixel_val = (rd.randint(0,255),rd.randint(0,255), rd.randint(0,255))
+            decison_val = rd.random()
+            if decison_val < 0.15:
+                pixel_val = (0, 0, 0)
+            elif decison_val < 0.5:
+                pixel_val = (255, 255, 255)
+            elif decison_val < 0.8:
+                pixel_val = (rd.randint(100, 255), 0, 0)
+            pixel_data.append(pixel_val)
 
         img.putdata(pixel_data)
 
