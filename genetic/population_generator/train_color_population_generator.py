@@ -16,7 +16,7 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
             directory = os.fsencode(os.path.join(image_dir, str(target_class).zfill(5)))
             for file in os.listdir(directory):
                 filename = os.fsdecode(file)
-                if not filename.endswith('.png'):
+                if not filename.endswith('.ppm'):
                     continue
                 img = Image.open(os.path.join(directory, file)).convert('RGB')
                 colors = img.getcolors(img.size[0]*img.size[1])
@@ -31,19 +31,15 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
         def _generate_noise(self):
             img, pixel_count = ImageUtilities.get_empty_image()
 
-            pixel_indices =  list(np.random.choice(list(range(len(self._colors))), p=self._probabilities, size=pixel_count))
+            num_drawn_pixels = int(0.7 * pixel_count)
+            pixel_indices =  list(np.random.choice(list(range(len(self._colors))), p=self._probabilities, size=num_drawn_pixels))
             pixel_data = [self._colors[idx] for idx in pixel_indices]
+            for _ in range(pixel_count - num_drawn_pixels):
+                pixel_data.append((rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255)))
+
+            rd.shuffle(pixel_data)
             img.putdata(pixel_data)
 
             return img
-
-        def _get_pixel_value(self):
-            decision_val = rd.random()
-            if decision_val < 0.2:
-                return rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255)
-            else:
-                color_index = np.random.choice(list(range(len(self._colors))), p=self._probabilities)
-                return self._colors[color_index]
-
 
 
