@@ -22,18 +22,18 @@ class RandomPopulationGenerator(PopulationGenerator):
         return img
 
     def _get_pixel_value(self):
-        return (rd.randint(0,255),rd.randint(0,255), rd.randint(0,255))
+
+        pixel_val = (rd.randint(0,255),rd.randint(0,255), rd.randint(0,255))
+
+        #decison_val = rd.random()
+        #if decison_val < 0.15:
+        #    pixel_val = (0, 0, 0)
+        #elif decison_val < 0.5:
+        #    pixel_val = (255, 255, 255)
+        #elif decison_val < 0.8:
+        #    pixel_val = (rd.randint(100, 255), 0, 0)
+        return pixel_val
 
     def __iter__(self):
         for i in range(self.size):
             yield ImageIndividual(image=self._generate_noise())
-
-"""
-decison_val = rd.random()
-if decison_val < 0.15:
-    pixel_val = (0, 0, 0)
-elif decison_val < 0.5:
-    pixel_val = (255, 255, 255)
-elif decison_val < 0.8:
-    pixel_val = (rd.randint(100, 255), 0, 0)
-    """

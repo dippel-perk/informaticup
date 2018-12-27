@@ -13,7 +13,7 @@ class ImageClassification:
         return next((x.confidence for x in self.classes if x.name == class_name), 0)
 
     def __repr__(self):
-        return "Image Classification %s\n%s" % (self.file, '\n'.join(cl.__repr__() for cl in self.classes))
+        return "Image Classification %s\n%s\n" % (self.file, '\n'.join(cl.__repr__() for cl in self.classes))
 
 class Class:
     def __init__(self, name : string, confidence : string):

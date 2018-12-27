@@ -13,7 +13,7 @@ ClassId,SignName
 11,Right-of-way at the next intersection
 12,Vorfahrt
 13,Einmalige Vorfahrt
-14,Stop
+14,Stoppschild
 15,No vehicles
 16,Vehicles over 3.5 metric tons prohibited
 17,No entry
@@ -40,5 +40,5 @@ ClassId,SignName
 38,Keep right
 39,Keep left
 40,Roundabout mandatory
-41,End of no passing
-42,End of no passing by vehicles over 3.5 metric tons
+41,Ende des Überholverbotes
+42,"Ende des Überholverbotes für Kraftfahrzeuge mit einer zulässigen Gesamtmasse über 3,5t"

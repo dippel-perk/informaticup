@@ -47,6 +47,8 @@ class GeneticAlgorithm:
 
     def _evolve(self, retain: float = 0.2, random_select: float = 0.05, mutate: float = 0.01):
 
+        assert all(individual.image for individual in self._get_current_population())
+
         current_population = self._get_current_population()
 
         graded = sorted(current_population, key=lambda x: self._fitness(x), reverse=True)

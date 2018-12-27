@@ -34,6 +34,27 @@ class ImageUtilities:
         image.putdata(data)
 
     @staticmethod
+    def rearrange_image(image : Image):
+        data = list(image.getdata())
+        rd.shuffle(data)
+        image.putdata(data)
+
+    @staticmethod
+    def add_image_avg(image1: Image, image2: Image):
+        data1 = list(image1.getdata())
+        data2 = list(image2.getdata())
+
+        new_image_data = list()
+
+        img, pixel_count = ImageUtilities.get_empty_image()
+
+        for i in range(pixel_count):
+            new_image_data.append(tuple(map(lambda x, y: int((x + y) * 0.5), data1[i], data2[i])))
+
+        img.putdata(new_image_data)
+        return img
+
+    @staticmethod
     def combine_images(image1 : Image, image2 : Image):
         data1 = list(image1.getdata())
         data2 = list(image2.getdata())
