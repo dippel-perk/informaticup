@@ -13,10 +13,13 @@ class GeneticAlgorithm:
     be overwritten by potential sub classes do have an influence on the behaviour of the algorithm.
     """
 
-    def __init__(self, classifier: Classifier, class_to_optimize: string):
+    def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2, random_select_rate: float = 0.05, mutation_rate: float = 0.01):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
+        self._retain_rate = retain_rate
+        self._random_select_rate = random_select_rate
+        self._mutation_rate = mutation_rate
 
     def _reset_parameters(self):
         self._population_history = list()
@@ -45,7 +48,7 @@ class GeneticAlgorithm:
         summed = sum(self._fitness(x) for x in population)
         return summed / len(population)
 
-    def _evolve(self, retain: float = 0.2, random_select: float = 0.05, mutate: float = 0.01):
+    def _evolve(self):
 
         assert all(individual.image for individual in self._get_current_population())
 
@@ -53,19 +56,14 @@ class GeneticAlgorithm:
 
         graded = sorted(current_population, key=lambda x: self._fitness(x), reverse=True)
 
-        retain_length = int(len(graded) * retain)
+        retain_length = int(len(graded) * self._retain_rate)
         parents = graded[:retain_length]
 
         # randomly add other individuals to
         # promote genetic diversity
         for individual in graded[retain_length:]:
-            if random_select > rd.random():
+            if self._random_select_rate > rd.random():
                 parents.append(individual)
-
-        # mutate some individuals
-        for individual in parents:
-            if mutate > rd.random():
-                self._mutate(individual=individual)
 
         # crossover parents to create children
         desired_length = len(current_population) - len(parents)
@@ -73,8 +71,10 @@ class GeneticAlgorithm:
 
         while len(children) < desired_length:
             male, female = rd.sample(parents, 2)
+
             if self._combinable(male, female):
                 children.append(self._crossover(male=male, female=female))
+
         parents.extend(children)
 
         self._population_history.append(parents)
@@ -83,13 +83,21 @@ class GeneticAlgorithm:
 
     def _crossover(self, male : ImageIndividual, female : ImageIndividual):
         assert self._combinable(male, female)
+
+        # mutate some individuals before crossover
+        if self._mutation_rate > rd.random():
+            male = self._mutate(male)
+        if self._mutation_rate > rd.random():
+            female = self._mutate(female)
+
         image = ImageUtilities.combine_images(male.image, female.image)
         return ImageIndividual(image=image)
 
     def _mutate(self, individual: ImageIndividual):
-        pos_to_mutate = rd.randint(0, len(individual) - 1)
-        ImageUtilities.mutate_pixel(individual.image, pos_to_mutate)
-        self._classify_individual(individual, force_recomputation=True)  # recompute classification
+        image = individual.image
+        pixels = rd.sample(list(range(len(individual))), int(len(individual) * self._mutation_rate))
+        ImageUtilities.mutate_pixels(image, pixels)
+        return ImageIndividual(image=image)
 
     def _combinable(self, male, female):
         return male.classification.share_classes(female.classification)
@@ -103,7 +111,7 @@ class GeneticAlgorithm:
             print("------------------Grade: %f, Generation %s with %d individuals------------------" %
                   (self._fitness_history[-1], str(i + 1), len(self._get_current_population())))
 
-            self._evolve(retain=0.2)
+            self._evolve()
 
             print(self._get_current_population())
 

@@ -34,6 +34,11 @@ class ImageUtilities:
         image.putdata(data)
 
     @staticmethod
+    def mutate_pixels(image : Image, pixels, min = 0, max = 255):
+        for pixel in pixels:
+            ImageUtilities.mutate_pixel(image, pixel, min, max)
+
+    @staticmethod
     def rearrange_image(image : Image):
         data = list(image.getdata())
         rd.shuffle(data)

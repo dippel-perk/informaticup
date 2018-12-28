@@ -3,6 +3,8 @@ from genetic.image_individual import ImageIndividual
 from utils.image_utilities import ImageUtilities
 from typing import List
 
+import random as rd
+
 class BasicApproach(GeneticAlgorithm):
 
     def _grade(self, population: List[ImageIndividual] = None):
