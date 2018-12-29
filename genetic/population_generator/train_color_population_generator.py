@@ -58,7 +58,7 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
         pixel_data = [self._colors[idx] for idx in pixel_indices]
         img.putdata(pixel_data)
 
-        img.show()
+        #img.show()
 
         return img
 

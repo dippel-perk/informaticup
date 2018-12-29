@@ -10,7 +10,8 @@ class ImageClassification:
         return any(name in own_names for name in other_names)
 
     def value_for_class(self, class_name):
-        return next((x.confidence for x in self.classes if x.name == class_name), 0)
+
+        return next((x.confidence for x in self.classes if str(x.name) == str(class_name)), 0)
 
     def __repr__(self):
         return "Image Classification %s\n%s\n" % (self.file, '\n'.join(cl.__repr__() for cl in self.classes))

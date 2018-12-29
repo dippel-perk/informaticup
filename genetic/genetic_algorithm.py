@@ -7,13 +7,15 @@ import string
 
 import random as rd
 
+
 class GeneticAlgorithm:
     """
     Base Class for a number of genetic algorithms. The class provides full functionality. All methods which can
     be overwritten by potential sub classes do have an influence on the behaviour of the algorithm.
     """
 
-    def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2, random_select_rate: float = 0.05, mutation_rate: float = 0.01):
+    def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
+                 random_select_rate: float = 0.05, mutation_rate: float = 0.01):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
@@ -33,12 +35,12 @@ class GeneticAlgorithm:
     def _get_current_population(self):
         return self._population_history[-1]
 
-    def _classify_individual(self, individual: ImageIndividual, force_recomputation = False):
+    def _classify_individual(self, individual: ImageIndividual, force_recomputation=False):
         if not individual.classification or force_recomputation:
             file = ImageUtilities.save_image_to_tempfile(individual.image)
             individual.classification = self._classifier.classify(file)
 
-    def _fitness(self, individual : ImageIndividual):
+    def _fitness(self, individual: ImageIndividual):
         self._classify_individual(individual)
         return individual.classification.value_for_class(self._class_to_optimize)
 
@@ -80,8 +82,7 @@ class GeneticAlgorithm:
         self._population_history.append(parents)
         self._fitness_history.append(self._grade())
 
-
-    def _crossover(self, male : ImageIndividual, female : ImageIndividual):
+    def _crossover(self, male: ImageIndividual, female: ImageIndividual):
         assert self._combinable(male, female)
 
         # mutate some individuals before crossover
@@ -102,22 +103,28 @@ class GeneticAlgorithm:
     def _combinable(self, male, female):
         return male.classification.share_classes(female.classification)
 
-    def run(self, initial_population_generator : PopulationGenerator, steps = 10):
+    def run(self, initial_population_generator: PopulationGenerator, steps=10, verbose=True):
 
         self._initialize_with_population([individual for individual in initial_population_generator])
 
-        print(self._get_current_population())
+        if verbose:
+            print(self._get_current_population())
         for i in range(steps):
-            print("------------------Grade: %f, Generation %s with %d individuals------------------" %
-                  (self._fitness_history[-1], str(i + 1), len(self._get_current_population())))
+            if verbose:
+                print("------------------Grade: %f, Generation %s with %d individuals------------------" %
+                      (self._fitness_history[-1], str(i + 1), len(self._get_current_population())))
 
             self._evolve()
 
-            print(self._get_current_population())
+            if verbose:
+                print(self._get_current_population())
 
         print("------------------Finished Process Grade History------------------")
-
         print(self._fitness_history)
+        if verbose:
+            print("------------------Final Population------------------")
+            print(self._get_current_population())
 
-        print("------------------Final Population------------------")
-        print(self._get_current_population())
+
+
+        return self._get_current_population()
