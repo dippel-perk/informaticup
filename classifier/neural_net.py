@@ -43,12 +43,12 @@ class NeuralNet:
             subset='validation')
 
         filepath = "weights-{epoch:02d}-{val_acc:.2f}.hdf5"
-        model_checkpoint_cb = ModelCheckpoint(filepath=filepath, monitor='acc', verbose=1, save_best_only=True,
+        model_checkpoint_cb = ModelCheckpoint(filepath=filepath, monitor='val_acc', verbose=1, save_best_only=True,
                                               mode='auto')
 
-        self._model.fit_generator(train_generator, epochs=epochs, steps_per_epoch=train_generator.samples,
+        self._model.fit_generator(train_generator, epochs=epochs, steps_per_epoch=train_generator.samples / batch_size,
                                   callbacks=[model_checkpoint_cb], validation_data=validation_generator,
-                                  validation_steps=validation_generator.samples)
+                                  validation_steps=validation_generator.samples / batch_size)
 
     def predict(self, file_name):
         img = Image.open(file_name)
@@ -89,5 +89,4 @@ class NeuralNet:
 if __name__ == '__main__':
     net = NeuralNet()
     prefix = '../../GTSRB/'
-    test_df = pd.read_csv(prefix + 'Final_Test/test.csv', delimiter=';')
     net.train(os.path.join(prefix, 'Final_Training/Images'))
