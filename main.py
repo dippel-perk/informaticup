@@ -49,13 +49,12 @@ if __name__ == '__main__':
                                                                                                               target_class=class_id,
                                                                                                               image_dir=image_path))
     elif args.genetic:
-        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=100,
-                                                          population_generator=TrainColorPopulationGenerator(size=50,
-                                                                                                             target_class=class_id,
-                                                                                                             image_dir=image_path))
+        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
+                                                          population_generator=SampleImagesRearrangePopulationGenerator(size=100, target_class=class_id,
+                                                                        image_dir=image_path))
     else:
         population_generator = PopulationGenerator(size=size)
 
-    population = genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence)
+    genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence)
 
     print(OnlineClassifier.SEEN_CLASSES)

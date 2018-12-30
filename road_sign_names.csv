@@ -5,38 +5,38 @@ ClassId,SignName
 3,Zulässige Höchstgeschwindigkeit (60)
 4,Zulässige Höchstgeschwindigkeit (70)
 5,Zulässige Höchstgeschwindigkeit (80)
-6,End of Zulässige Höchstgeschwindigkeit (80)
+6,NULL End of Zulässige Höchstgeschwindigkeit (80)
 7,Zulässige Höchstgeschwindigkeit (100)
 8,Zulässige Höchstgeschwindigkeit (120)
 9,Überholverbot für Kraftfahrzeuge aller Art
 10,"Überholverbot für Kraftfahrzeuge mit einer zulässigen Gesamtmasse über 3,5t"
-11,Right-of-way at the next intersection
+11,Einmalige Vorfahrt
 12,Vorfahrt
-13,Einmalige Vorfahrt
+13,Vorfahrt gewähren
 14,Stoppschild
-15,No vehicles
+15,NULL No vehicles
 16,"Verbot für Kraftfahrzeuge mit einer zulässigen Gesamtmasse von 3,5t"
 17,Verbot der Einfahrt
 18,Gefahrenstelle
 19,Kurve (links)
 20,Kurve (rechts)
 21,Doppelkurve (zunächst links)
-22,Bumpy road
+22,Unebene Fahrbahn
 23,Schleudergefahr bei Nässe oder Schmutz
-24,Road narrows on the right
+24,NULL Road narrows on the right
 25,Baustelle
-26,Traffic signals
-27,Pedestrians
-28,Children crossing
+26,NULL Traffic signals
+27,NULL Pedestrians
+28,NULL Children crossing
 29,Fahrradfahrer
-30,Beware of ice/snow
+30,NULL Beware of ice/snow
 31,Wildwechsel
 32,Ende aller Streckenverbote
 33,Ausschließlich rechts
 34,Ausschließlich links
-35,Ahead only
-36,Go straight or right
-37,Go straight or left
+35,Ausschließlich geradeaus
+36,NULL Go straight or right
+37,NULL Go straight or left
 38,Rechts vorbei
 39,Links vorbei
 40,Kreisverkehr

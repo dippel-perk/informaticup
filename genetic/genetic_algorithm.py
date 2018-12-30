@@ -107,12 +107,15 @@ class GeneticAlgorithm:
 
         self._initialize_with_population([individual for individual in initial_population_generator])
 
+        needed_steps = steps
+
         for i in range(steps):
 
             if verbose:
                 print("[%s] Generation; Grade: %f" % (str(i + 1), self._fitness_history[-1]))
 
             if self._fitness_history[-1] > grade_limit:
+                needed_steps = i
                 break
 
             self._evolve()
@@ -123,4 +126,4 @@ class GeneticAlgorithm:
             print(self._fitness_history)
             print(self._get_current_population())
 
-        return self._get_current_population()
+        return self._get_current_population(), needed_steps

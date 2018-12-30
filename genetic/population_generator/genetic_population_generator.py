@@ -18,7 +18,7 @@ class GeneticPopulationGenerator(PopulationGenerator):
         classifier = OfflineClassifier()
         genetic = BasicApproach(classifier=classifier, class_to_optimize=str(self._class_id),
                                 mutation_rate=self._mutation_rate)
-        population = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, verbose=False)
+        population, _ = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, verbose=False)
 
         top_population = sorted(population, key=lambda individual: individual.classification.value_for_class(class_name=str(self._class_id)), reverse=True)[:self.size]
 
