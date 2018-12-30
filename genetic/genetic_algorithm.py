@@ -103,28 +103,24 @@ class GeneticAlgorithm:
     def _combinable(self, male, female):
         return male.classification.share_classes(female.classification)
 
-    def run(self, initial_population_generator: PopulationGenerator, steps=10, verbose=True):
+    def run(self, initial_population_generator: PopulationGenerator, grade_limit=2.0, steps=100, verbose=True):
 
         self._initialize_with_population([individual for individual in initial_population_generator])
 
-        if verbose:
-            print(self._get_current_population())
         for i in range(steps):
+
             if verbose:
-                print("------------------Grade: %f, Generation %s with %d individuals------------------" %
-                      (self._fitness_history[-1], str(i + 1), len(self._get_current_population())))
+                print("[%s] Generation; Grade: %f" % (str(i + 1), self._fitness_history[-1]))
+
+            if self._fitness_history[-1] > grade_limit:
+                break
 
             self._evolve()
 
-            if verbose:
-                print(self._get_current_population())
 
-        print("------------------Finished Process Grade History------------------")
-        print(self._fitness_history)
         if verbose:
-            print("------------------Final Population------------------")
+            print("Finshed")
+            print(self._fitness_history)
             print(self._get_current_population())
-
-
 
         return self._get_current_population()

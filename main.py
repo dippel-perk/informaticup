@@ -13,6 +13,7 @@ from road_sign_class_mapper import RoadSignClassMapper
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--confidence', required=True, type=float)
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--rand', action='store_true')
@@ -29,8 +30,8 @@ if __name__ == '__main__':
 
     genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05)
 
-    image_path = '../GTSRB/Final_Training/Images'
-    size = 10
+    image_path = '../GTSRB/Final_Training/'
+    size = 50
 
     if args.color:
         population_generator = TrainColorPopulationGenerator(size=size, target_class=class_id,
@@ -48,4 +49,4 @@ if __name__ == '__main__':
     else:
         population_generator = PopulationGenerator(size=size)
 
-    population = genetic.run(initial_population_generator=population_generator, steps=20)
+    population = genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence)
