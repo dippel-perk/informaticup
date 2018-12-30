@@ -8,6 +8,7 @@ from classifier.online_classifier import OnlineClassifier
 from road_sign_class_mapper import RoadSignClassMapper
 from classifier.classifier import Classifier
 import pandas as pd
+import time
 
 if __name__ == '__main__':
     classifier = OnlineClassifier()
@@ -30,8 +31,11 @@ if __name__ == '__main__':
                                                               size=100, target_class=class_id,
                                                               image_dir=image_path))
 
+        start = time.time()
+
         population, steps = genetic.run(initial_population_generator=population_generator, grade_limit=grade_limit,
                                         steps=100)
+        end = time.time()
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))
 
@@ -42,6 +46,7 @@ if __name__ == '__main__':
             'class_name': class_name,
             'steps': steps,
             'confidence': best.classification.value_for_class(class_name),
+            'time': end - start,
             'size': size,
             'mutation_rate': mutation_rate,
             'grade_limit': grade_limit
