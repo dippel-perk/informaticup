@@ -32,8 +32,8 @@ if __name__ == '__main__':
 
     genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05)
 
-    image_path = '../GTSRB/Final_Training/Images'
-    size = 10
+    image_path = '../GTSRB/Final_Training/'
+    size = 50
 
     if args.color:
         population_generator = TrainColorPopulationGenerator(size=size, target_class=class_id,
@@ -57,3 +57,5 @@ if __name__ == '__main__':
         population_generator = PopulationGenerator(size=size)
 
     population = genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence)
+
+    print(OnlineClassifier.SEEN_CLASSES)

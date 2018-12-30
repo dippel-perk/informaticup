@@ -6,6 +6,8 @@ from classifier.classification import ImageClassification, Class
 
 class OnlineClassifier(Classifier):
 
+    SEEN_CLASSES = []
+
     RATE_LIMIT_INTERVAL = 60
 
     __API_URL = 'https://phinau.de/trasi'
@@ -48,6 +50,9 @@ class OnlineClassifier(Classifier):
         classes = list()
 
         for cl in data:
+            if cl["class"] not in OnlineClassifier.SEEN_CLASSES:
+                OnlineClassifier.SEEN_CLASSES.append(cl["class"])
+
             classes.append(Class(cl["class"], cl["confidence"]))
 
         return ImageClassification(file_name, classes)
