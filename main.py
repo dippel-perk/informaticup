@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     classifier = OnlineClassifier()
 
-    class_name = "Vorfahrt"
+    class_name = "Zulässige Höchstgeschwindigkeit (100)"
     class_id = RoadSignClassMapper().get_class_by_name(name=class_name)
 
     genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05)
