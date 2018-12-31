@@ -4,8 +4,8 @@ import requests
 from classifier.classifier import Classifier
 from classifier.classification import ImageClassification, Class
 
-class OnlineClassifier(Classifier):
 
+class OnlineClassifier(Classifier):
     SEEN_CLASSES = []
 
     RATE_LIMIT_INTERVAL = 60
@@ -34,12 +34,12 @@ class OnlineClassifier(Classifier):
         resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
 
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_BAD_REQUEST:
-            #TODO: Implement more exception handling
+            # TODO: Implement more exception handling
             raise Exception("The given request image is malformed.")
 
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_TOO_MANY_REQUESTS:
             elapsed = time.time() - self._time_start
-            wait_time = OnlineClassifier.RATE_LIMIT_INTERVAL - elapsed
+            wait_time = max(OnlineClassifier.RATE_LIMIT_INTERVAL - elapsed, 0)
             self._counter = 0
             print("[Warning] Too many requests, waiting {} seconds".format(wait_time))
             time.sleep(wait_time)
@@ -56,5 +56,3 @@ class OnlineClassifier(Classifier):
             classes.append(Class(cl["class"], cl["confidence"]))
 
         return ImageClassification(file_name, classes)
-
-
