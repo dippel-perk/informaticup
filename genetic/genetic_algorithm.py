@@ -15,7 +15,7 @@ class GeneticAlgorithm:
     """
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
-                 random_select_rate: float = 0.05, mutation_rate: float = 0.01):
+                 random_select_rate: float = 0.00, mutation_rate: float = 0.02):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
