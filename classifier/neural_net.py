@@ -9,7 +9,7 @@ import os.path
 
 
 class NeuralNet:
-    def __init__(self, img_size=64, num_classes=44, weights_file=None):
+    def __init__(self, img_size=64, num_classes=43, weights_file=None):
         self._img_size = img_size
         self._num_classes = num_classes
 

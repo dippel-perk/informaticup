@@ -12,7 +12,7 @@ import time
 
 if __name__ == '__main__':
     classifier = OnlineClassifier()
-    grade_limit = 0.9
+    grade_limit = 0.99
     image_path = '../GTSRB/Final_Training/Images'
     size = 20
     data = []
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         start = time.time()
 
         population, steps = genetic.run(initial_population_generator=population_generator, grade_limit=grade_limit,
-                                        steps=100)
+                                        steps=150)
         end = time.time()
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))
