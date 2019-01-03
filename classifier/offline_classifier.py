@@ -5,7 +5,7 @@ from classifier.classification import Class, ImageClassification
 
 
 class OfflineClassifier(Classifier):
-    def __init__(self, weights_file='weights-partial-dataset-12-0.98.hdf5'):
+    def __init__(self, weights_file='weights/weights-partial.hdf5'):
         self._neural_net = NeuralNet(weights_file=weights_file)
 
     def classify(self, file_name):
