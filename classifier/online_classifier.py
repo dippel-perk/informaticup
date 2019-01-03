@@ -15,6 +15,8 @@ class OnlineClassifier(Classifier):
 
     __API_RESPONSE_CODE_TOO_MANY_REQUESTS = 429
     __API_RESPONSE_CODE_BAD_REQUEST = 400
+    __API_RESPONSE_CODE_SERVICE_UNAVAILABLE = 503
+    __API_RESPONSE_CODE_UNAUTHORIZED = 401
 
     def __init__(self):
         self._time_start = 0
@@ -33,9 +35,14 @@ class OnlineClassifier(Classifier):
         }
         resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
 
-        if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_BAD_REQUEST:
-            # TODO: Implement more exception handling
-            raise Exception("The given request image is malformed.")
+        if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_BAD_REQUEST or resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_UNAUTHORIZED:
+            print(resp)
+            raise ValueError("WRONG API KEY OR BAD REQUEST")
+
+        if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_SERVICE_UNAVAILABLE:
+            print(resp)
+            time.sleep(10)
+            return self.classify(file_name)
 
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_TOO_MANY_REQUESTS:
             elapsed = time.time() - self._time_start
