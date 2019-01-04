@@ -27,13 +27,13 @@ if __name__ == '__main__':
 
     classifier = OnlineClassifier()
 
-    class_name = "Zulässige Höchstgeschwindigkeit (100)"
+    class_name = "Ende der Geschwindigkeitsbegrenzung (80)"
     class_id = RoadSignClassMapper().get_class_by_name(name=class_name)
 
-    genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05)
+    genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05, mutation_intensity=0.05)
 
-    image_path = '../GTSRB/Final_Training/'
-    size = 50
+    image_path = '../GTSRB/Final_Training/Images'
+    size = 20
 
     if args.color:
         population_generator = TrainColorPopulationGenerator(size=size, target_class=class_id,

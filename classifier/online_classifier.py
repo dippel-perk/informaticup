@@ -1,6 +1,8 @@
 import time
 import requests
 
+from json import JSONDecodeError
+
 from classifier.classifier import Classifier
 from classifier.classification import ImageClassification, Class
 
@@ -52,7 +54,11 @@ class OnlineClassifier(Classifier):
             time.sleep(wait_time)
             return self.classify(file_name)
 
-        data = resp.json()
+        try:
+            data = resp.json()
+        except JSONDecodeError:
+            print("Could not decode JSON:", resp)
+            return self.classify(file_name)
 
         classes = list()
 

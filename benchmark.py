@@ -1,4 +1,4 @@
-import argparse
+import pathlib
 
 from genetic.basic_approach import BasicApproach
 from genetic.population_generator.sample_images_rearrange_population_generator import \
@@ -17,6 +17,8 @@ if __name__ == '__main__':
     size = 20
     data = []
     mutation_rate = 0.05
+
+    pathlib.Path('tmp/best/').mkdir(parents=True, exist_ok=True)
 
     for class_id in range(43):
         print('Class {}'.format(class_id))

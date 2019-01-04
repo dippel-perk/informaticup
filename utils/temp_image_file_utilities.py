@@ -40,5 +40,5 @@ class TempImageFileUtilities:
 
     @staticmethod
     def __add_prefix_to_file_name(file_name : string):
-        assert not file_name.endswith(Classifier.DESIRED_IMAGE_EXTENSION)
+        assert not file_name.endswith("."+Classifier.DESIRED_IMAGE_EXTENSION)
         return file_name + "." + Classifier.DESIRED_IMAGE_EXTENSION
