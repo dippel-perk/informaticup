@@ -41,7 +41,7 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
 
         self._colors, self._probabilities = zip(*color_distribution.items())
 
-        print(color_distribution)
+        #print(color_distribution)
 
         total = sum(self._probabilities)
         self._probabilities = [x / total for x in self._probabilities]
