@@ -16,7 +16,7 @@ class GeneticAlgorithm:
     """
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
-                 random_select_rate: float = 0.00, mutation_rate: float = 0.02, mutation_intensity = 0.05):
+                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity = 0.05):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
@@ -110,29 +110,23 @@ class GeneticAlgorithm:
         parents.extend(children)
 
         self._population_history.append(parents)
-        #self._compute_fitness()
+        self._compute_fitness()
         self._fitness_history.append(self._grade())
 
         self._post_evolve()
 
     def _crossover(self, male: ImageIndividual, female: ImageIndividual):
         assert self._combinable(male, female)
-
-        # mutate some individuals before crossover
-        if self._mutation_rate > rd.random():
-            male = self._mutate(male)
-        if self._mutation_rate > rd.random():
-            female = self._mutate(female)
-
         image = ImageUtilities.combine_images(male.image, female.image)
-        return ImageIndividual(image=image)
+        individual = ImageIndividual(image=image)
+        if self._mutation_rate > rd.random():
+            individual = self._mutate(individual)
+        return individual
 
     def _mutate(self, individual: ImageIndividual):
-        image = individual.image
-        pixels = rd.sample(list(range(len(individual))),
-                           max(int(len(individual) * self._mutation_intensity), len(individual)))
-        ImageUtilities.mutate_pixels(image, pixels)
-        return ImageIndividual(image=image)
+        pixels = rd.sample(list(range(len(individual))), min(int(len(individual) * self._mutation_intensity), len(individual)))
+        ImageUtilities.mutate_pixels(individual.image, pixels)
+        return individual
 
     def _combinable(self, male, female):
         return male.classification.share_classes(female.classification)

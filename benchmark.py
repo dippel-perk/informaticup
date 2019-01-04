@@ -16,7 +16,8 @@ if __name__ == '__main__':
     image_path = '../GTSRB/Final_Training/Images'
     size = 20
     data = []
-    mutation_rate = 0.05
+    mutation_rate = 1.0
+    mutation_intensity = 0.03
 
     pathlib.Path('tmp/best/').mkdir(parents=True, exist_ok=True)
 
@@ -26,7 +27,7 @@ if __name__ == '__main__':
         if class_name is None:
             continue
 
-        genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=mutation_rate)
+        genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=mutation_rate, mutation_intensity=mutation_intensity)
 
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
                                                           population_generator=SampleImagesRearrangePopulationGenerator(
@@ -51,6 +52,7 @@ if __name__ == '__main__':
             'time': end - start,
             'size': size,
             'mutation_rate': mutation_rate,
+            'mutation_intensity': mutation_intensity,
             'grade_limit': grade_limit
         })
         pd.DataFrame(data).to_csv('results.csv')

@@ -2,6 +2,7 @@ import random as rd
 import string
 
 from PIL import Image
+import numpy as np
 
 from classifier.classifier import Classifier
 from utils.temp_image_file_utilities import TempImageFileUtilities
@@ -28,10 +29,9 @@ class ImageUtilities:
                Classifier.DESIRED_IMAGE_WIDTH*Classifier.DESIRED_IMAGE_HEIGHT
 
     @staticmethod
-    def mutate_pixel(image : Image, pixel, min = 0, max = 255):
-        data = list(image.getdata())
-        data[pixel] = (rd.randint(min,max), rd.randint(min,max), rd.randint(min,max))
-        image.putdata(data)
+    def mutate_pixel(image : Image.Image, pixel, min = 0, max = 255):
+        indices = np.unravel_index(pixel, (64, 64))
+        image.putpixel((indices[0], indices[1]), (rd.randint(min,max), rd.randint(min,max), rd.randint(min,max)))
 
     @staticmethod
     def mutate_pixels(image : Image, pixels, min = 0, max = 255):
@@ -61,15 +61,12 @@ class ImageUtilities:
 
     @staticmethod
     def combine_images(image1 : Image, image2 : Image):
-        data1 = list(image1.getdata())
-        data2 = list(image2.getdata())
+        data1 = image1.getdata()
+        data2 = image2.getdata()
 
         img, pixel_count = ImageUtilities.get_empty_image()
 
-        pixel_data = list()
-
-        for i in range(pixel_count):
-            pixel_data.append(rd.choice((data1[i], data2[i])))
+        pixel_data = [rd.choice([pixel_1, pixel_2]) for pixel_1, pixel_2 in zip(data1, data2)]
 
         img.putdata(pixel_data)
         return img

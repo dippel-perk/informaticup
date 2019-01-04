@@ -27,7 +27,7 @@ class BasicApproach(GeneticAlgorithm):
             population = self._get_current_population()
         return max(self._fitness(x) for x in population)
 
-    def _post_evolve(self) -> None:
+    '''def _post_evolve(self) -> None:
         """
         Increases the mutation intensity iff the fitness did not improve during the evolve
         :return: None
@@ -43,7 +43,7 @@ class BasicApproach(GeneticAlgorithm):
             self._mutation_intensity = self._base_mutation_intensity
             self._mutation_rate = self._base_mutation_rate
             print("[Info] Decreased mutation intensity to", self._mutation_intensity)
-            print("[Info] Decreased mutation rate to", self._mutation_rate)
+            print("[Info] Decreased mutation rate to", self._mutation_rate)'''
 
 
 

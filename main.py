@@ -29,10 +29,10 @@ if __name__ == '__main__':
 
     classifier = OnlineClassifier()
 
-    class_name = "Zulässige Höchstgeschwindigkeit (30)"
+    class_name = "Zulässige Höchstgeschwindigkeit (20)"
     class_id = RoadSignClassMapper().get_class_by_name(name=class_name)
 
-    genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=0.05, mutation_intensity=0.05)
+    genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.05)
 
     image_path = '../GTSRB/Final_Training/Images'
     size = 20
@@ -51,7 +51,7 @@ if __name__ == '__main__':
                                                                                                               target_class=class_id,
                                                                                                               image_dir=image_path))
     elif args.genetic:
-        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
+        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=50,
                                                           population_generator=SampleImagesRearrangePopulationGenerator(size=100, target_class=class_id,
                                                                         image_dir=image_path))
     elif args.brute_force:
@@ -59,6 +59,6 @@ if __name__ == '__main__':
     else:
         population_generator = PopulationGenerator(size=size)
 
-    genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence)
+    genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence, steps=200)
 
     print(OnlineClassifier.SEEN_CLASSES)
