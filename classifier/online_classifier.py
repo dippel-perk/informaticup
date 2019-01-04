@@ -1,10 +1,12 @@
 import time
 import requests
-
+from PIL.Image import Image
 from json import JSONDecodeError
+from typing import List
 
 from classifier.classifier import Classifier
 from classifier.classification import ImageClassification, Class
+from utils.image_utilities import ImageUtilities
 
 
 class OnlineClassifier(Classifier):
@@ -24,16 +26,18 @@ class OnlineClassifier(Classifier):
         self._time_start = 0
         self._counter = 0
 
-    def classify(self, file_name):
+    def classify(self, image: Image):
         if self._counter == 0:
             self._time_start = time.time()
         self._counter += 1
+
+        file = ImageUtilities.save_image_to_tempfile(image)
 
         data = {
             'key': OnlineClassifier.__API_KEY
         }
         files = {
-            'image': open(file_name, 'rb')
+            'image': open(file, 'rb')
         }
         resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
 
@@ -44,7 +48,7 @@ class OnlineClassifier(Classifier):
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_SERVICE_UNAVAILABLE:
             print(resp)
             time.sleep(10)
-            return self.classify(file_name)
+            return self.classify(image)
 
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_TOO_MANY_REQUESTS:
             elapsed = time.time() - self._time_start
@@ -52,13 +56,13 @@ class OnlineClassifier(Classifier):
             self._counter = 0
             print("[Warning] Too many requests, waiting {} seconds".format(wait_time))
             time.sleep(wait_time)
-            return self.classify(file_name)
+            return self.classify(image)
 
         try:
             data = resp.json()
         except JSONDecodeError:
             print("Could not decode JSON:", resp)
-            return self.classify(file_name)
+            return self.classify(file)
 
         classes = list()
 
@@ -68,4 +72,7 @@ class OnlineClassifier(Classifier):
 
             classes.append(Class(cl["class"], cl["confidence"]))
 
-        return ImageClassification(file_name, classes)
+        return ImageClassification(classes)
+
+    def classify_batch(self, images: List[Image]):
+        return [self.classify(image) for image in images]

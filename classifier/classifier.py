@@ -1,4 +1,6 @@
 import string
+from PIL.Image import Image
+from typing import List
 
 class Classifier():
 
@@ -8,7 +10,11 @@ class Classifier():
 
     DESIRED_IMAGE_DIMENSIONS = (DESIRED_IMAGE_WIDTH, DESIRED_IMAGE_HEIGHT)
 
-    def classify(self, file_name : string):
+    def classify(self, image: Image):
        raise NotImplementedError
+
+    def classify_batch(self, images: List[Image]):
+        raise NotImplementedError
+
 
 

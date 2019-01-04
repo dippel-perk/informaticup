@@ -1,7 +1,8 @@
 import string
+
+
 class ImageClassification:
-    def __init__(self, file, classes):
-        self.file = file
+    def __init__(self, classes):
         self.classes = classes
 
     def share_classes(self, other):
@@ -10,14 +11,14 @@ class ImageClassification:
         return any(name in own_names for name in other_names)
 
     def value_for_class(self, class_name):
-
         return next((x.confidence for x in self.classes if str(x.name) == str(class_name)), 0)
 
     def __repr__(self):
-        return "Image Classification %s\n%s\n" % (self.file, '\n'.join(cl.__repr__() for cl in self.classes))
+        return "Image Classification %s\n" % ('\n'.join(cl.__repr__() for cl in self.classes))
+
 
 class Class:
-    def __init__(self, name : string, confidence : string):
+    def __init__(self, name: string, confidence: string):
         self.name = name
         self.confidence = float(confidence)
 

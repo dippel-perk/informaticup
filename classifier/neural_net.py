@@ -3,9 +3,10 @@ from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
 from keras import Sequential
 from keras.callbacks import ModelCheckpoint
 import numpy as np
-from PIL import Image
+from PIL.Image import Image
 import pandas as pd
 import os.path
+from typing import List
 
 
 class NeuralNet:
@@ -50,12 +51,11 @@ class NeuralNet:
                                   callbacks=[model_checkpoint_cb], validation_data=validation_generator,
                                   validation_steps=validation_generator.samples / batch_size)
 
-    def predict(self, file_name):
-        img = Image.open(file_name)
-        x = np.array(img, dtype='float32')
-        x /= 255
-        x = x[np.newaxis, :, :, :]
-        result = self._model.predict(x, batch_size=1)
+    def predict(self, images: List[Image]):
+        batch = []
+        for img in images:
+            batch.append(np.array(img, dtype='float32') / 255)
+        result = self._model.predict(np.array(batch), batch_size=len(images))
         return result
 
     def _build_model(self):

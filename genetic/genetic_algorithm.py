@@ -6,6 +6,7 @@ from utils.image_utilities import ImageUtilities
 import string
 
 import random as rd
+import time
 
 
 class GeneticAlgorithm:
@@ -31,6 +32,7 @@ class GeneticAlgorithm:
     def _initialize_with_population(self, population: List[ImageIndividual]):
         self._reset_parameters()
         self._population_history.append(population)
+        self._compute_fitness()
         self._fitness_history.append(self._grade())
 
     def _get_current_population(self):
@@ -38,12 +40,17 @@ class GeneticAlgorithm:
 
     def _classify_individual(self, individual: ImageIndividual, force_recomputation=False):
         if not individual.classification or force_recomputation:
-            file = ImageUtilities.save_image_to_tempfile(individual.image)
-            individual.classification = self._classifier.classify(file)
+            individual.classification = self._classifier.classify(individual.image)
 
     def _fitness(self, individual: ImageIndividual):
         self._classify_individual(individual)
         return individual.classification.value_for_class(self._class_to_optimize)
+
+    def _compute_fitness(self):
+        population = self._get_current_population()
+        classifications = self._classifier.classify_batch([individual.image for individual in population])
+        for i in range(len(classifications)):
+            population[i].classification = classifications[i]
 
     def _grade(self, population: List[ImageIndividual] = None):
         if not population:
@@ -103,6 +110,7 @@ class GeneticAlgorithm:
         parents.extend(children)
 
         self._population_history.append(parents)
+        #self._compute_fitness()
         self._fitness_history.append(self._grade())
 
         self._post_evolve()
@@ -152,8 +160,9 @@ class GeneticAlgorithm:
                 needed_steps = i
                 break
 
+            start = time.time()
             self._evolve()
-
+            print(time.time() - start)
 
         if verbose:
             print("Finshed")
