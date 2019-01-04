@@ -20,6 +20,7 @@ class BasicApproach(GeneticAlgorithm):
                          mutation_intensity=mutation_intensity)
 
         self._base_mutation_intensity = mutation_intensity
+        self._base_mutation_rate = mutation_rate
 
     def _grade(self, population: List[ImageIndividual] = None):
         if not population:
@@ -35,12 +36,18 @@ class BasicApproach(GeneticAlgorithm):
             return
         if self._fitness_history[-1] <= self._fitness_history[-2]:
             self._mutation_intensity += self._base_mutation_intensity
+            self._mutation_rate += self._base_mutation_rate
+            print("[Info] Increased mutation intensity to", self._mutation_intensity)
+            print("[Info] Increased mutation rate to", self._mutation_rate)
         else:
             self._mutation_intensity = self._base_mutation_intensity
+            self._mutation_rate = self._base_mutation_rate
+            print("[Info] Decreased mutation intensity to", self._mutation_intensity)
+            print("[Info] Decreased mutation rate to", self._mutation_rate)
 
 
 
-    #def _mutate(self, individual: ImageIndividual):
+            #def _mutate(self, individual: ImageIndividual):
     #    assert individual.image
     #    print("Rearranging Mutation")
     #    individual.image = ImageUtilities.rearrange_image(individual.image)

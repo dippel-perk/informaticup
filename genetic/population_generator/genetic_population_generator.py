@@ -1,9 +1,7 @@
 from genetic.population_generator.population_generator import PopulationGenerator
 from classifier.offline_classifier import OfflineClassifier
-from genetic.basic_approach import BasicApproach
+from genetic.grade_average import GradeAverage
 from genetic.image_individual import ImageIndividual
-from road_sign_class_mapper import RoadSignClassMapper
-
 
 class GeneticPopulationGenerator(PopulationGenerator):
 
@@ -16,9 +14,9 @@ class GeneticPopulationGenerator(PopulationGenerator):
 
     def __iter__(self):
         classifier = OfflineClassifier()
-        genetic = BasicApproach(classifier=classifier, class_to_optimize=str(self._class_id),
-                                mutation_rate=self._mutation_rate)
-        population, _ = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, verbose=False)
+        genetic = GradeAverage(classifier=classifier, class_to_optimize=str(self._class_id),
+                                mutation_rate=self._mutation_rate, average_size=self.size)
+        population, _ = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, grade_limit=0.95, verbose=True)
 
         top_population = sorted(population, key=lambda individual: individual.classification.value_for_class(class_name=str(self._class_id)), reverse=True)[:self.size]
 
