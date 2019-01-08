@@ -9,35 +9,36 @@ from road_sign_class_mapper import RoadSignClassMapper
 from classifier.classifier import Classifier
 import pandas as pd
 import time
+from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
+from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
+from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
 
 if __name__ == '__main__':
     classifier = OnlineClassifier()
-    grade_limit = 0.99
+    grade_limit = 1.0
     image_path = '../GTSRB/Final_Training/Images'
     size = 20
     data = []
-    mutation_rate = 1.0
+    mutation_rate = 0.99
     mutation_intensity = 0.03
 
     pathlib.Path('tmp/best/').mkdir(parents=True, exist_ok=True)
 
-    for class_id in range(43):
+    for class_id in [0, 1, 12, 17, 19, 25, 33]:
         print('Class {}'.format(class_id))
         class_name = RoadSignClassMapper().get_name_by_class(class_id)
         if class_name is None:
             continue
 
-        genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_rate=mutation_rate, mutation_intensity=mutation_intensity)
-
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
-                                                          population_generator=SampleImagesRearrangePopulationGenerator(
-                                                              size=100, target_class=class_id,
-                                                              image_dir=image_path))
+                                                          population_generator=PolygonPopulationGenerator(100),
+                                                          algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
+        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1)
 
         start = time.time()
 
         population, steps = genetic.run(initial_population_generator=population_generator, grade_limit=grade_limit,
-                                        steps=150)
+                                        steps=100)
         end = time.time()
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))

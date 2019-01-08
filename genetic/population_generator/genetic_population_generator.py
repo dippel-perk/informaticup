@@ -22,10 +22,6 @@ class GeneticPopulationGenerator(PopulationGenerator):
 
         top_population = sorted(population, key=lambda individual: individual.classification.value_for_class(class_name=str(self._class_id)), reverse=True)[:self.size]
 
-        for individual in top_population[:1]:
-            individual.image.show()
-
-
         print("[Info] Genetic population generator's final population was graded as follows by the offline classifier", [individual.classification.value_for_class(class_name=str(self._class_id)) for individual in top_population])
 
         for individual in top_population:

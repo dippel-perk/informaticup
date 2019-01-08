@@ -26,13 +26,14 @@ class GeometricGeneticAlgorithm(BasicApproach):
 
         male_objects = male.get_objects()
         female_objects = female.get_objects()
-        parent_objects = male_objects + female_objects
+        parent_objects = [male_objects, female_objects]
         average = int((len(male_objects) + len(female_objects)) / 2)
 
         for i in range(average):
-            obj = rd.choice(parent_objects)
-            while obj in new_objects:
-                obj = rd.choice(parent_objects)
+            idx = rd.choice([0, 1])
+            if i >= len(parent_objects[idx]):
+                idx = (idx + 1) % 2
+            obj = parent_objects[idx][i]
             new_objects.append(obj)
 
         if self._mutation_rate > rd.random():
