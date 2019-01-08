@@ -11,7 +11,7 @@ import random as rd
 class BasicApproach(GeneticAlgorithm):
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
-                 random_select_rate: float = 0.00, mutation_rate: float = 0.02, mutation_intensity = 0.05):
+                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity = 0.05):
         super().__init__(classifier=classifier,
                          class_to_optimize=class_to_optimize,
                          retain_rate=retain_rate,

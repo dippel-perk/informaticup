@@ -16,7 +16,7 @@ class GradeAverage(GeneticAlgorithm):
     __NO_AVERAGE_SIZE = -1
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
-                 random_select_rate: float = 0.00, mutation_rate: float = 0.02,
+                 random_select_rate: float = 0.00, mutation_rate: float = 1.0,
                  mutation_intensity = 0.05, average_size = __NO_AVERAGE_SIZE):
         super().__init__(classifier=classifier,
                          class_to_optimize=class_to_optimize,

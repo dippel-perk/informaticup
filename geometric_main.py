@@ -11,8 +11,6 @@ from genetic.population_generator.genetic_population_generator import GeneticPop
 from genetic.population_generator.random_brute_force_population_generator import RandomBruteForcePopulationGenerator
 from classifier.online_classifier import OnlineClassifier
 from road_sign_class_mapper import RoadSignClassMapper
-from genetic.geometric.circle_population_generator import CirclePopulationGenerator
-from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
 
 if __name__ == '__main__':
 
@@ -26,7 +24,6 @@ if __name__ == '__main__':
     group.add_argument('--genetic', action='store_true')
     group.add_argument('--gradient', action='store_true')
     group.add_argument('--brute-force', action='store_true')
-    group.add_argument('--circle', action='store_true')
 
     args = parser.parse_args()
 
@@ -59,13 +56,9 @@ if __name__ == '__main__':
                                                                         image_dir=image_path))
     elif args.brute_force:
         population_generator = RandomBruteForcePopulationGenerator(size= size, classifier=classifier, target_class=class_name)
-    elif args.circle:
-        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=50,
-                                                          population_generator=CirclePopulationGenerator(100), algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
-        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.05)
     else:
         population_generator = PopulationGenerator(size=size)
 
-    genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence, steps=40)
+    genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence, steps=200)
 
     print(OnlineClassifier.SEEN_CLASSES)
