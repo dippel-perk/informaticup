@@ -2,7 +2,7 @@ from genetic.population_generator.population_generator import PopulationGenerato
 from classifier.offline_classifier import OfflineClassifier
 from genetic.grade_average import GradeAverage
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
-from genetic.image_individual import ImageIndividual
+from genetic.geometric.geometric_mutations import GeometricMutations
 
 class GeneticPopulationGenerator(PopulationGenerator):
 
@@ -16,7 +16,12 @@ class GeneticPopulationGenerator(PopulationGenerator):
 
     def __iter__(self):
         classifier = OfflineClassifier()
-        genetic = self._algorithm(classifier=classifier, class_to_optimize=str(self._class_id),
+
+        if self._algorithm == GeometricGeneticAlgorithm:
+            genetic = self._algorithm(classifier=classifier, class_to_optimize=str(self._class_id),
+                                      mutation_intensity=self._mutation_intensity, mutation_function=GeometricMutations.mutate_circle)
+        else:
+            genetic = self._algorithm(classifier=classifier, class_to_optimize=str(self._class_id),
                                 mutation_intensity=self._mutation_intensity)
         population, _ = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, grade_limit=1.1, verbose=True)
 

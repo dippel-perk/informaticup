@@ -1,17 +1,17 @@
-from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.basic_approach import BasicApproach
 from genetic.image_individual import ImageIndividual
 from classifier.classifier import Classifier
-from utils.image_utilities import ImageUtilities
 from genetic.geometric.geometric_individual import GeometricIndividual
+from genetic.geometric.geometric_objects import GeometricObject
 from genetic.geometric.circle_population_generator import generate_circle
 import random as rd
 import string
+from typing import Callable
 
 
 class GeometricGeneticAlgorithm(BasicApproach):
 
-    def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
+    def __init__(self, classifier: Classifier, class_to_optimize: string, mutation_function: Callable[[GeometricObject], GeometricObject], retain_rate: float = 0.2,
                  random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05):
         super().__init__(classifier=classifier,
                          class_to_optimize=class_to_optimize,
@@ -19,6 +19,8 @@ class GeometricGeneticAlgorithm(BasicApproach):
                          random_select_rate=random_select_rate,
                          mutation_rate=mutation_rate,
                          mutation_intensity=mutation_intensity)
+
+        self._mutation_callback = mutation_function
 
     def _crossover(self, male: GeometricIndividual, female: GeometricIndividual):
         assert self._combinable(male, female)
@@ -39,7 +41,7 @@ class GeometricGeneticAlgorithm(BasicApproach):
         if self._mutation_rate > rd.random():
             for i in range(len(new_objects)):
                 if self._mutation_intensity > rd.random():
-                    new_objects[i] = generate_circle(10, 5)
+                    new_objects[i] = self._mutation_callback(new_objects[i])
         return GeometricIndividual(new_objects)
 
     def _mutate(self, individual: ImageIndividual):

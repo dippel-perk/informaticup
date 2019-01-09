@@ -15,6 +15,7 @@ from genetic.geometric.circle_population_generator import CirclePopulationGenera
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
 from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
 from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.geometric.geometric_mutations import GeometricMutations
 from PIL import Image
 import PIL.ImageOps
 
@@ -68,12 +69,14 @@ if __name__ == '__main__':
     elif args.circle:
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=30,
                                                           population_generator=CirclePopulationGenerator(100), algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
-        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1)
+        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1,
+                                            mutation_function=GeometricMutations.mutate_circle)
     elif args.polygon:
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
                                                           population_generator=PolygonPopulationGenerator(100),
                                                           algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
-        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1)
+        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1,
+                                            mutation_function=GeometricMutations.mutate_circle)
     elif args.gilogo:
         image = Image.open("gi-logo.jpg")
         inverted_image = PIL.ImageOps.invert(image)
@@ -81,7 +84,8 @@ if __name__ == '__main__':
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
                                                           population_generator=BitmapPopulationGenerator(100, image),
                                                           algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
-        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1)
+        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1,
+                                            mutation_function=GeometricMutations.mutate_circle)
     else:
         population_generator = PopulationGenerator(size=size)
 

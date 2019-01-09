@@ -129,6 +129,7 @@ class GeneticAlgorithm:
         return individual
 
     def _combinable(self, male, female):
+        #TODO: The combinable method might not be the best choice
         return male.classification.share_classes(female.classification)
 
     def run(self, initial_population_generator: PopulationGenerator, grade_limit = 2.0, steps=100, verbose=True):
