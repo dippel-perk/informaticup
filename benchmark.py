@@ -3,6 +3,7 @@ import pathlib
 from genetic.basic_approach import BasicApproach
 from genetic.population_generator.sample_images_rearrange_population_generator import \
     SampleImagesRearrangePopulationGenerator
+import argparse
 from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
 from classifier.online_classifier import OnlineClassifier
 from road_sign_class_mapper import RoadSignClassMapper
@@ -12,38 +13,111 @@ import time
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
 from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
 from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.geometric.circle_population_generator import CirclePopulationGenerator
+from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
+from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
+from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.geometric.geometric_mutations import GeometricMutations
+from PIL import Image
+import PIL.ImageOps
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--confidence', required=True, type=float)
+    parser.add_argument('-s', '--steps', type=float, default=100)
+    parser.add_argument('-ps', '--pre-steps', type=float, default=20)
+    parser.add_argument('-id', '--image-dir', type=str, default='../GTSRB/Final_Training/Images')
+    parser.add_argument('-sz', '--size', type=float, default=20)
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--normal', action='store_true')
+    group.add_argument('--circle', action='store_true')
+    group.add_argument('--polygon', action='store_true')
+    group.add_argument('--gilogo', action='store_true')
+
+    args = parser.parse_args()
+
     classifier = OnlineClassifier()
-    grade_limit = 1.0
-    image_path = '../GTSRB/Final_Training/Images'
-    size = 20
+    grade_limit = args.confidence
+    image_path = args.image_dir
+    size = args.size
+    genetic_size = 100
     data = []
-    mutation_rate = 0.99
-    mutation_intensity = 0.03
+    mutation_rate = 1.0
+    mutation_intensity = 0.1
 
-    pathlib.Path('tmp/best/').mkdir(parents=True, exist_ok=True)
+    label = None
+    made_dir = False
 
-    for class_id in [0, 1, 12, 17, 19, 25, 33]:
+    for class_id in range(43):
         print('Class {}'.format(class_id))
         class_name = RoadSignClassMapper().get_name_by_class(class_id)
         if class_name is None:
             continue
 
-        population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
-                                                          population_generator=PolygonPopulationGenerator(100),
-                                                          algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
-        genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1)
+        population_generator = None
+        genetic = None
+
+        if args.normal:
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=SampleImagesRearrangePopulationGenerator(
+                                                                  size=genetic_size, target_class=class_id,
+                                                                  image_dir=image_path),
+                                                              mutation_intensity=mutation_intensity)
+            genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name,
+                                    mutation_intensity=mutation_intensity)
+            label = "normal"
+
+        elif args.circle:
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=CirclePopulationGenerator(
+                                                                  genetic_size),
+                                                              algorithm=GeometricGeneticAlgorithm,
+                                                              mutation_intensity=mutation_intensity)
+            genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
+                                                mutation_intensity=mutation_intensity,
+                                                mutation_function=GeometricMutations.mutate_circle)
+            label = "circle"
+        elif args.polygon:
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=PolygonPopulationGenerator(
+                                                                  genetic_size),
+                                                              algorithm=GeometricGeneticAlgorithm,
+                                                              mutation_intensity=mutation_intensity)
+            genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
+                                                mutation_intensity=mutation_intensity,
+                                                mutation_function=GeometricMutations.mutate_polygon_function(
+                                                    dimension=3))
+            label = "polygon"
+        elif args.gilogo:
+            image = Image.open("gi-logo.jpg")
+            inverted_image = PIL.ImageOps.invert(image)
+            image = inverted_image.convert("1").resize((200, 200))
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=BitmapPopulationGenerator(
+                                                                  genetic_size, image,
+                                                                  avg_num=50),
+                                                              algorithm=GeometricGeneticAlgorithm,
+                                                              mutation_intensity=mutation_intensity)
+            genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
+                                                mutation_intensity=mutation_intensity,
+                                                mutation_function=GeometricMutations.mutate_bitmap_function(img=image))
+            label = "gilogo"
 
         start = time.time()
 
         population, steps = genetic.run(initial_population_generator=population_generator, grade_limit=grade_limit,
-                                        steps=100)
+                                        steps=args.steps)
         end = time.time()
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))
 
-        best.image.save('tmp/best/{}.{}'.format(class_id, Classifier.DESIRED_IMAGE_EXTENSION))
+        if not made_dir:
+            pathlib.Path('tmp/best/{}/'.format(label)).mkdir(parents=True, exist_ok=True)
+            made_dir = True
+
+        best.image.save('tmp/best/{}/{}.{}'.format(label, class_id, Classifier.DESIRED_IMAGE_EXTENSION))
 
         data.append({
             'class_id': class_id,
@@ -57,5 +131,3 @@ if __name__ == '__main__':
             'grade_limit': grade_limit
         })
         pd.DataFrame(data).to_csv('results.csv')
-
-    print(OnlineClassifier.SEEN_CLASSES)
