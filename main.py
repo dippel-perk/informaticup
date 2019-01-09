@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     classifier = OnlineClassifier()
 
-    class_name = "Vorfahrt"
+    class_name = "Zulässige Höchstgeschwindigkeit (70)"
     class_id = RoadSignClassMapper().get_class_by_name(name=class_name)
 
     genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.05)
@@ -76,16 +76,16 @@ if __name__ == '__main__':
                                                           population_generator=PolygonPopulationGenerator(100),
                                                           algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
         genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1,
-                                            mutation_function=GeometricMutations.mutate_circle)
+                                            mutation_function=GeometricMutations.mutate_polygon_function(dimension=3))
     elif args.gilogo:
         image = Image.open("gi-logo.jpg")
         inverted_image = PIL.ImageOps.invert(image)
         image = inverted_image.convert("1").resize((200, 200))
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=20,
-                                                          population_generator=BitmapPopulationGenerator(100, image),
+                                                          population_generator=BitmapPopulationGenerator(100, image, avg_num=50),
                                                           algorithm=GeometricGeneticAlgorithm, mutation_intensity=0.05)
         genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.1,
-                                            mutation_function=GeometricMutations.mutate_circle)
+                                            mutation_function=GeometricMutations.mutate_bitmap_function(img=image))
     else:
         population_generator = PopulationGenerator(size=size)
 
