@@ -1,18 +1,8 @@
+import numpy as np
+
 from genetic.population_generator.population_generator import PopulationGenerator
 from genetic.geometric.geometric_objects import Circle
 from genetic.geometric.geometric_individual import GeometricIndividual
-import numpy as np
-import random as rd
-from genetic.geometric.geometric_individual import IMAGE_DIMENSION
-
-
-def generate_circle(avg_radius, std_radius):
-    x = np.random.randint(0, IMAGE_DIMENSION)
-    y = np.random.randint(0, IMAGE_DIMENSION)
-    radius = np.random.normal(avg_radius, std_radius)
-    color = (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
-    return Circle(x=x, y=y, radius=radius, color=color)
-
 
 class CirclePopulationGenerator(PopulationGenerator):
 
@@ -27,7 +17,7 @@ class CirclePopulationGenerator(PopulationGenerator):
         circles = []
         num_circles = int(np.random.normal(self._avg_num_circles, self._std_num_circles))
         for i in range(num_circles):
-            circles.append(generate_circle(self._avg_radius_size, self._std_radius_size))
+            circles.append(Circle.generate(self._avg_radius_size, self._std_radius_size))
         return circles
 
     def __iter__(self):

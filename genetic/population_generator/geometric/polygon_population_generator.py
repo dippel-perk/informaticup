@@ -1,9 +1,10 @@
+import numpy as np
+import random as rd
+
 from genetic.population_generator.population_generator import PopulationGenerator
 from genetic.geometric.geometric_objects import Polygon
 from genetic.geometric.geometric_individual import GeometricIndividual
-import numpy as np
-import random as rd
-from genetic.geometric.geometric_individual import IMAGE_DIMENSION
+from config.geometric_individual_configuration import GeometricIndividualConfiguration
 
 
 class PolygonPopulationGenerator(PopulationGenerator):
@@ -18,7 +19,7 @@ class PolygonPopulationGenerator(PopulationGenerator):
         for i in range(self.size):
             polygons = []
             for j in range(int(np.random.normal(self._avg_num, self._std_num))):
-                points = [rd.randint(0, IMAGE_DIMENSION) for _ in range(2 * self._dimension)]
+                points = [rd.randint(0, GeometricIndividualConfiguration.IMAGE_WIDTH) for _ in range(2 * self._dimension)]
                 color = (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
                 polygons.append(Polygon(points=points, color=color))
             yield GeometricIndividual(polygons)

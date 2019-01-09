@@ -1,25 +1,22 @@
 import pathlib
-
-from genetic.basic_approach import BasicApproach
-from genetic.population_generator.sample_images_rearrange_population_generator import \
-    SampleImagesRearrangePopulationGenerator
-import argparse
-from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
-from classifier.online_classifier import OnlineClassifier
-from road_sign_class_mapper import RoadSignClassMapper
-from classifier.classifier import Classifier
-import pandas as pd
 import time
+import argparse
+import pandas as pd
+import PIL.ImageOps
+
+from classifier.classifier import Classifier
+from classifier.online_classifier import OnlineClassifier
+from genetic.genetic_algorithm import GeneticAlgorithm
+from genetic.population_generator.sample_images_rearrange_population_generator import SampleImagesRearrangePopulationGenerator
+from genetic.population_generator.geometric.polygon_population_generator import PolygonPopulationGenerator
+from genetic.population_generator.geometric.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.population_generator.geometric.circle_population_generator import CirclePopulationGenerator
+from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
-from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
-from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
-from genetic.geometric.circle_population_generator import CirclePopulationGenerator
-from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
-from genetic.geometric.polygon_population_generator import PolygonPopulationGenerator
-from genetic.geometric.bitmap_population_generator import BitmapPopulationGenerator
 from genetic.geometric.geometric_mutations import GeometricMutations
 from PIL import Image
-import PIL.ImageOps
+
+from road_sign_class_mapper import RoadSignClassMapper
 
 if __name__ == '__main__':
 
@@ -67,7 +64,7 @@ if __name__ == '__main__':
                                                                   size=genetic_size, target_class=class_id,
                                                                   image_dir=image_path),
                                                               mutation_intensity=mutation_intensity)
-            genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name,
+            genetic = GeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                     mutation_intensity=mutation_intensity)
             label = "normal"
 
@@ -79,7 +76,7 @@ if __name__ == '__main__':
                                                               mutation_intensity=mutation_intensity)
             genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
-                                                mutation_function=GeometricMutations.mutate_circle)
+                                                mutation_function=GeometricMutations.mutate_circle_function())
             label = "circle"
         elif args.polygon:
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
@@ -90,7 +87,7 @@ if __name__ == '__main__':
             genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_polygon_function(
-                                                    dimension=3))
+                                                    n=3))
             label = "polygon"
         elif args.gilogo:
             image = Image.open("gi-logo.jpg")

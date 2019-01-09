@@ -1,8 +1,5 @@
 from genetic.population_generator.population_generator import PopulationGenerator
-from classifier.offline_classifier import OfflineClassifier
-from genetic.basic_approach import BasicApproach
 from genetic.image_individual import ImageIndividual
-from road_sign_class_mapper import RoadSignClassMapper
 import foolbox
 from classifier.neural_net import NeuralNet
 from foolbox.criteria import TargetClassProbability

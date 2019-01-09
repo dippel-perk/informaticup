@@ -1,6 +1,6 @@
 import argparse
 
-from genetic.basic_approach import BasicApproach
+from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.population_generator.population_generator import PopulationGenerator
 from genetic.population_generator.random_population_generator import RandomPopulationGenerator
 from genetic.population_generator.train_color_population_generator import TrainColorPopulationGenerator
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     class_name = "Fußgänger"
     class_id = RoadSignClassMapper().get_class_by_name(name=class_name)
 
-    genetic = BasicApproach(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.05)
+    genetic = GeneticAlgorithm(classifier=classifier, class_to_optimize=class_name, mutation_intensity=0.05)
 
     image_path = '../GTSRB/Final_Training/Images'
     size = 20
@@ -60,5 +60,3 @@ if __name__ == '__main__':
         population_generator = PopulationGenerator(size=size)
 
     genetic.run(initial_population_generator=population_generator, grade_limit=args.confidence, steps=200)
-
-    print(OnlineClassifier.SEEN_CLASSES)

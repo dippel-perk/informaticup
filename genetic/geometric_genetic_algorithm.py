@@ -1,15 +1,14 @@
-from genetic.basic_approach import BasicApproach
+import random as rd
+import string
+
+from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.image_individual import ImageIndividual
 from classifier.classifier import Classifier
 from genetic.geometric.geometric_individual import GeometricIndividual
 from genetic.geometric.geometric_objects import GeometricObject
-from genetic.geometric.circle_population_generator import generate_circle
-import random as rd
-import string
 from typing import Callable
 
-
-class GeometricGeneticAlgorithm(BasicApproach):
+class GeometricGeneticAlgorithm(GeneticAlgorithm):
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, mutation_function: Callable[[GeometricObject], GeometricObject], retain_rate: float = 0.2,
                  random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05):
@@ -38,11 +37,22 @@ class GeometricGeneticAlgorithm(BasicApproach):
             obj = parent_objects[idx][i]
             new_objects.append(obj)
 
+        child = GeometricIndividual(new_objects)
+
         if self._mutation_rate > rd.random():
+            child = self._mutate(individual=child)
+
+        return child
+
+    def _mutate(self, individual: ImageIndividual):
+
+        if individual.__class__ == GeometricIndividual:
+            new_objects = individual.get_objects()
+
             for i in range(len(new_objects)):
                 if self._mutation_intensity > rd.random():
                     new_objects[i] = self._mutation_callback(new_objects[i])
-        return GeometricIndividual(new_objects)
 
-    def _mutate(self, individual: ImageIndividual):
-        raise NotImplementedError
+            return GeometricIndividual(new_objects)
+        else:
+            raise NotImplementedError

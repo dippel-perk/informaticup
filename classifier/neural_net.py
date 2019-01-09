@@ -1,13 +1,14 @@
+import numpy as np
+import os.path
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
 from keras import Sequential
 from keras.callbacks import ModelCheckpoint
-import numpy as np
 from PIL.Image import Image
-import pandas as pd
-import os.path
 from typing import List
 
+#TODO: Kommentare einfugen.
 
 class NeuralNet:
     def __init__(self, img_size=64, num_classes=43, weights_file=None):

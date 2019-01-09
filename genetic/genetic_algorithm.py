@@ -55,8 +55,7 @@ class GeneticAlgorithm:
     def _grade(self, population: List[ImageIndividual] = None):
         if not population:
             population = self._get_current_population()
-        summed = sum(self._fitness(x) for x in population)
-        return summed / len(population)
+        return max(self._fitness(x) for x in population)
 
     def _pre_evolve(self) -> None:
         """
@@ -149,18 +148,16 @@ class GeneticAlgorithm:
         for i in range(steps):
 
             if verbose:
-                print("[%s] Generation; Grade: %f" % (str(i + 1), self._fitness_history[-1]))
+                print("[%s] Generation: Grade: %f" % (str(i + 1).zfill(3), self._fitness_history[-1]))
 
             if self._fitness_history[-1] > grade_limit:
                 needed_steps = i
                 break
 
-            start = time.time()
             self._evolve()
-            print(time.time() - start)
 
         if verbose:
-            print("Finshed")
+            print("[END] Genetic Algorithm terminated")
             print(self._fitness_history)
             print(self._get_current_population())
 

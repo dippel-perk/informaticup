@@ -8,5 +8,3 @@ class PopulationGenerator:
 
     def __iter__(self):
         raise NotImplementedError
-
-

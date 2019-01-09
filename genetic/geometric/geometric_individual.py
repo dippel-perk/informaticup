@@ -1,24 +1,32 @@
-from genetic.image_individual import ImageIndividual
-from utils.image_utilities import ImageUtilities
 from PIL import Image
+from typing import List
 
-IMAGE_DIMENSION = 1024
-
+from config.geometric_individual_configuration import GeometricIndividualConfiguration
+from genetic.image_individual import ImageIndividual
+from genetic.geometric.geometric_objects import GeometricObject
+from classifier.classifier import Classifier
 
 class GeometricIndividual(ImageIndividual):
-    def __init__(self, geometric_objects):
-        self._geometric_objects = geometric_objects
-        img = self._drawImage()
-        super().__init__(image=img)
-        self.classification = None
+    """
+    Represents a geometric individual. A geometric individual is an image individual which contains additional
+    information about geometric objects which are part of the image.
+    """
 
-    def _drawImage(self):
+    def __init__(self, geometric_objects: List[GeometricObject]):
+        self._geometric_objects = geometric_objects
+        super().__init__(image=self._drawImage())
+
+    def _drawImage(self) -> Image:
+        """
+        Draws an image which contains all geometric objects.
+        :return: The generated image
+        """
         #img = Image.open('road_resized.jpg')
-        img = Image.new('RGB', (IMAGE_DIMENSION, IMAGE_DIMENSION))
+        img = Image.new('RGB', GeometricIndividualConfiguration.IMAGE_DIMENSION)
         for object in self._geometric_objects:
             object.draw(img)
-        img = img.resize((64, 64), resample=Image.ANTIALIAS)
+        img = img.resize(Classifier.DESIRED_IMAGE_DIMENSIONS, resample=Image.ANTIALIAS)
         return img
 
-    def get_objects(self):
+    def get_objects(self) -> List[GeometricObject]:
         return self._geometric_objects

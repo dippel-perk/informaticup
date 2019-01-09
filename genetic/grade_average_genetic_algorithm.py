@@ -1,14 +1,12 @@
+import numpy as np
+import string
+
 from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.image_individual import ImageIndividual
 from classifier.classifier import Classifier
 from typing import List
-from math import inf
 
-import numpy as np
-import string
-
-
-class GradeAverage(GeneticAlgorithm):
+class GradeAverageGeneticAlgorithm(GeneticAlgorithm):
     """
     Overwrites the grade function which now returns the average fitness of the population.
     """
@@ -35,7 +33,7 @@ class GradeAverage(GeneticAlgorithm):
 
         fitness_list = [self._fitness(x) for x in population]
 
-        if self._average_size != GradeAverage.__NO_AVERAGE_SIZE:
+        if self._average_size != GradeAverageGeneticAlgorithm.__NO_AVERAGE_SIZE:
             assert self._average_size > 0
             fitness_list = sorted(fitness_list, reverse=True)[:self._average_size]
 
