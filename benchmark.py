@@ -29,6 +29,8 @@ if __name__ == '__main__':
     parser.add_argument('-ps', '--pre-steps', type=float, default=20)
     parser.add_argument('-id', '--image-dir', type=str, default='../GTSRB/Final_Training/Images')
     parser.add_argument('-sz', '--size', type=float, default=20)
+    parser.add_argument('-si', '--start-index', type=int, default=0)
+    parser.add_argument('-ei', '--end-index', type=int, default=43)
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--normal', action='store_true')
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     label = None
     made_dir = False
 
-    for class_id in range(43):
+    for class_id in range(args.start_index, args.end_index):
         print('Class {}'.format(class_id))
         class_name = RoadSignClassMapper().get_name_by_class(class_id)
         if class_name is None:
