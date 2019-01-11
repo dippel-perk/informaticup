@@ -1,0 +1,5 @@
+1, normal
+11, tiles
+19, gilogo
+12, circle
+25, polygon

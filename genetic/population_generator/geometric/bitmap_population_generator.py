@@ -4,6 +4,7 @@ import random as rd
 from genetic.population_generator.population_generator import PopulationGenerator
 from genetic.geometric.geometric_objects import Bitmap
 from genetic.geometric.geometric_individual import GeometricIndividual
+from config.geometric_individual_configuration import GeometricIndividualConfiguration
 
 class BitmapPopulationGenerator(PopulationGenerator):
 
@@ -17,7 +18,7 @@ class BitmapPopulationGenerator(PopulationGenerator):
         for i in range(self.size):
             bitmaps = []
             for j in range(int(np.random.normal(self._avg_num, self._std_num))):
-                x, y = [rd.randint(0, GeometricIndividual.IMAGE_DIMENSION) for _ in range(2)]
+                x, y = [rd.randint(0, GeometricIndividualConfiguration.IMAGE_WIDTH) for _ in range(2)]
                 color = (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
                 bitmaps.append(Bitmap(img=self._img, x=x, y=y, color=color))
             yield GeometricIndividual(bitmaps)

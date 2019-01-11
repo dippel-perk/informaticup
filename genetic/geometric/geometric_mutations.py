@@ -5,6 +5,8 @@ from config.geometric_individual_configuration import GeometricIndividualConfigu
 from genetic.geometric.geometric_objects import GeometricObject
 from genetic.geometric.geometric_objects import Polygon, Bitmap
 from genetic.geometric.geometric_objects import Circle
+from genetic.geometric.geometric_objects import Tile
+from genetic.population_generator.geometric.tile_population_generator import interpolation_color_generator
 
 class GeometricMutations:
     """
@@ -54,3 +56,17 @@ class GeometricMutations:
             bitmap = Bitmap(img=img, x=x, y=y, color=color)
             return bitmap
         return mutate_bitmap
+
+    @staticmethod
+    def mutate_tile_function(color1, color2):
+        """
+        Generates a mutation function which assigns a random color to the given tile.
+        :param img: The input image.
+        :return: The mutation function.
+        """
+        def mutate_tile(object: GeometricObject):
+            color_generator = interpolation_color_generator(color1, color2)
+            tile = Tile(coordinates=object.coordinates, color=next(color_generator))
+            return tile
+        return mutate_tile
+

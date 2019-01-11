@@ -17,7 +17,7 @@ class GeometricObject:
         """
         raise NotImplementedError
 
-class Circle:
+class Circle(GeometricObject):
     def __init__(self, x, y, radius, color):
         self.x = x
         self.y = y
@@ -54,7 +54,7 @@ class Circle:
         return self.x == other.x and self.y == other.y and self.radius == other.radius and self.color == other.color
 
 
-class Polygon:
+class Polygon(GeometricObject):
     def __init__(self, points, color):
         self.points = points
         self.color = color
@@ -69,7 +69,7 @@ class Polygon:
         draw.polygon(self.points, self.color)
 
 
-class Bitmap:
+class Bitmap(GeometricObject):
     def __init__(self, x, y, img, color):
         self.img = img
         self.x = x
@@ -84,4 +84,21 @@ class Bitmap:
         """
         draw = ImageDraw.Draw(image)
         draw.bitmap((self.x, self.y), bitmap=self.img, fill=self.color)
+
+
+class Tile(GeometricObject):
+
+    def __init__(self, coordinates, color):
+        self.coordinates = coordinates
+        self.color = color
+
+    def draw(self, image: Image) -> None:
+        """
+        Draws the tile into the image.
+        :param image: The input image.
+        :return: None
+        """
+        draw = ImageDraw.Draw(image)
+        draw.polygon(self.coordinates, fill=self.color)
+
 
