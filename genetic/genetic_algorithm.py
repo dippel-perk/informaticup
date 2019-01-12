@@ -150,7 +150,7 @@ class GeneticAlgorithm:
             if verbose:
                 print("[%s] Generation: Grade: %f" % (str(i + 1).zfill(3), self._fitness_history[-1]))
 
-            if self._fitness_history[-1] > grade_limit:
+            if self._fitness_history[-1] >= grade_limit:
                 needed_steps = i
                 break
 
