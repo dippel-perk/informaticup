@@ -8,16 +8,20 @@ from genetic.geometric.geometric_individual import GeometricIndividual
 from genetic.geometric.geometric_objects import GeometricObject
 from typing import Callable
 
+
 class GeometricGeneticAlgorithm(GeneticAlgorithm):
 
-    def __init__(self, classifier: Classifier, class_to_optimize: string, mutation_function: Callable[[GeometricObject], GeometricObject], retain_rate: float = 0.2,
-                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05):
+    def __init__(self, classifier: Classifier, class_to_optimize: string,
+                 mutation_function: Callable[[GeometricObject], GeometricObject], retain_rate: float = 0.2,
+                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05,
+                 save_generations: bool = True, output_dir: str = None):
         super().__init__(classifier=classifier,
                          class_to_optimize=class_to_optimize,
                          retain_rate=retain_rate,
                          random_select_rate=random_select_rate,
                          mutation_rate=mutation_rate,
-                         mutation_intensity=mutation_intensity)
+                         mutation_intensity=mutation_intensity, save_generations=save_generations,
+                         output_dir=output_dir)
 
         self._mutation_callback = mutation_function
 

@@ -20,10 +20,10 @@ class GeneticPopulationGenerator(PopulationGenerator):
 
         if self._algorithm == GeometricGeneticAlgorithm:
             genetic = self._algorithm(classifier=classifier, class_to_optimize=str(self._class_id),
-                                      mutation_intensity=self._mutation_intensity, mutation_function=self._mutation_function)
+                                      mutation_intensity=self._mutation_intensity, mutation_function=self._mutation_function, save_generations=False)
         else:
             genetic = self._algorithm(classifier=classifier, class_to_optimize=str(self._class_id),
-                                mutation_intensity=self._mutation_intensity)
+                                mutation_intensity=self._mutation_intensity, save_generations=False)
         population, _ = genetic.run(initial_population_generator=self._population_generator, steps=self._steps, grade_limit=1.1, verbose=True)
 
         top_population = sorted(population, key=lambda individual: individual.classification.value_for_class(class_name=str(self._class_id)), reverse=True)[:self.size]

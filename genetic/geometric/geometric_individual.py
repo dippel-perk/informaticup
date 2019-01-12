@@ -6,6 +6,7 @@ from genetic.image_individual import ImageIndividual
 from genetic.geometric.geometric_objects import GeometricObject
 from classifier.classifier import Classifier
 
+
 class GeometricIndividual(ImageIndividual):
     """
     Represents a geometric individual. A geometric individual is an image individual which contains additional
@@ -21,7 +22,6 @@ class GeometricIndividual(ImageIndividual):
         Draws an image which contains all geometric objects.
         :return: The generated image
         """
-        #img = Image.open('road_resized.jpg')
         img = Image.new('RGB', GeometricIndividualConfiguration.IMAGE_DIMENSION)
         for object in self._geometric_objects:
             object.draw(img)

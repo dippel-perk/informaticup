@@ -110,17 +110,17 @@ if __name__ == '__main__':
     elif args.gilogo:
         image = Image.open("gi-logo.jpg")
         inverted_image = PIL.ImageOps.invert(image)
-        image = inverted_image.convert("1").resize((200, 200))
+        image = inverted_image.convert("1")
+        square_size = 5
         population_generator = GeneticPopulationGenerator(size=size,
                                                           class_id=class_id,
                                                           steps=20,
                                                           population_generator=BitmapPopulationGenerator(100,
-                                                                                                         image,
-                                                                                                         avg_num=50),
+                                                                                                         image, num_horizontal=square_size, num_vertical=square_size),
                                                           algorithm=GeometricGeneticAlgorithm,
                                                           mutation_intensity=0.05,
                                                           mutation_function=GeometricMutations.mutate_bitmap_function(
-                                                              img=image))
+                                                              img=image, num_horizontal=square_size, num_vertical=square_size))
         genetic = GeometricGeneticAlgorithm(classifier=classifier,
                                             class_to_optimize=class_name,
                                             mutation_intensity=0.1,
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
     population, _ = genetic.run(initial_population_generator=population_generator,
                                 grade_limit=args.confidence,
-                                steps=40)
+                                steps=100)
 
     best = max(population, key=lambda individual: individual.classification.value_for_class(class_name=class_name))
     best.image.save("tmp/best_" + str(class_id) + '.png')

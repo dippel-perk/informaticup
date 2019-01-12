@@ -4,6 +4,9 @@ from typing import List
 from genetic.population_generator.population_generator import PopulationGenerator
 from utils.image_utilities import ImageUtilities
 import string
+import os
+import datetime
+import pathlib
 
 import random as rd
 import time
@@ -16,7 +19,8 @@ class GeneticAlgorithm:
     """
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
-                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity = 0.05):
+                 random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05,
+                 save_generations: bool = True, output_dir: str = None):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
@@ -24,6 +28,15 @@ class GeneticAlgorithm:
         self._random_select_rate = random_select_rate
         self._mutation_rate = mutation_rate
         self._mutation_intensity = mutation_intensity
+        self._save_history = save_generations
+        saved_args = locals()
+        if save_generations:
+            if output_dir is None:
+                self._output_dir = os.path.join('tmp', 'output', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            pathlib.Path(self._output_dir).mkdir(parents=True, exist_ok=True)
+            with open(os.path.join(self._output_dir, 'config.txt'), 'w+') as f:
+                for name, val in saved_args.items():
+                    f.write('{}: {}\n'.format(name, val))
 
     def _reset_parameters(self):
         self._population_history = list()
@@ -56,6 +69,14 @@ class GeneticAlgorithm:
         if not population:
             population = self._get_current_population()
         return max(self._fitness(x) for x in population)
+
+    def _save_generation(self, step):
+        population = self._get_current_population()
+        pathlib.Path(self._output_dir, str(step)).mkdir(parents=True, exist_ok=True)
+        for idx, individual in enumerate(population):
+            individual.image.save(
+                os.path.join(self._output_dir, str(step),
+                             '{}_{}.{}'.format(idx, self._fitness(individual), Classifier.DESIRED_IMAGE_EXTENSION)))
 
     def _pre_evolve(self) -> None:
         """
@@ -123,15 +144,16 @@ class GeneticAlgorithm:
         return individual
 
     def _mutate(self, individual: ImageIndividual):
-        pixels = rd.sample(list(range(len(individual))), min(int(len(individual) * self._mutation_intensity), len(individual)))
+        pixels = rd.sample(list(range(len(individual))),
+                           min(int(len(individual) * self._mutation_intensity), len(individual)))
         ImageUtilities.mutate_pixels(individual.image, pixels)
         return individual
 
     def _combinable(self, male, female):
-        #TODO: The combinable method might not be the best choice
+        # TODO: The combinable method might not be the best choice
         return male.classification.share_classes(female.classification)
 
-    def run(self, initial_population_generator: PopulationGenerator, grade_limit = 2.0, steps=100, verbose=True):
+    def run(self, initial_population_generator: PopulationGenerator, grade_limit=2.0, steps=100, verbose=True):
         """
         Runs the genetic algorithm
         :param initial_population_generator: The generator which should be used to generate the initial population
@@ -146,6 +168,9 @@ class GeneticAlgorithm:
         needed_steps = steps
 
         for i in range(steps):
+
+            if self._save_history:
+                self._save_generation(step=i)
 
             if verbose:
                 print("[%s] Generation: Grade: %f" % (str(i + 1).zfill(3), self._fitness_history[-1]))

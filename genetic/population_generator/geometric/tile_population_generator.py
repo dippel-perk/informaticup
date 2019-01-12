@@ -10,8 +10,7 @@ from config.geometric_individual_configuration import GeometricIndividualConfigu
 
 def interpolation_color_generator(color1, color2):
     """
-    Generate random colors between ``color1`` and ``color2``.
-    Both arguments should be instances of ``Color``.
+    Generate random colors between color1 and color2.
     """
     # Get the difference along each axis
     d_red = color1[0] - color2[0]
@@ -56,13 +55,10 @@ class TilePopulationGenerator(PopulationGenerator):
         for coords in generator(scaled_width, scaled_height):
             yield [(x * side_length, y * side_length) for (x, y) in coords]
 
-    def generate_triangles(self, *args, **kwargs):
-        """Generate coordinates for a tiling of triangles."""
-        return self._scale_coordinates(self.generate_unit_triangles, *args, **kwargs)
-
     def __iter__(self):
         for i in range(self.size):
-            shapes = self.generate_triangles(GeometricIndividualConfiguration.IMAGE_DIMENSION[0],
+            shapes = self._scale_coordinates(self.generate_unit_triangles,
+                                             GeometricIndividualConfiguration.IMAGE_DIMENSION[0],
                                              GeometricIndividualConfiguration.IMAGE_DIMENSION[1],
                                              100)
             colors = interpolation_color_generator(self._color1, self._color2)

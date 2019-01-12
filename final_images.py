@@ -96,15 +96,16 @@ if __name__ == '__main__':
         elif method == 'gilogo':
             image = Image.open("gi-logo.jpg")
             inverted_image = PIL.ImageOps.invert(image)
-            image = inverted_image.convert("1").resize((200, 200))
+            image = inverted_image.convert("1")
+            square_size = 5
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
                                                               population_generator=BitmapPopulationGenerator(
-                                                                  genetic_size, image,
-                                                                  avg_num=50),
+                                                                  genetic_size, image, num_vertical=square_size, num_horizontal=square_size
+                                                                 ),
                                                               algorithm=GeometricGeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               mutation_function=GeometricMutations.mutate_bitmap_function(
-                                                                  img=image))
+                                                                  img=image, num_horizontal=square_size, num_vertical=square_size))
             genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_bitmap_function(img=image))

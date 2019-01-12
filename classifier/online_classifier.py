@@ -1,5 +1,6 @@
 import time
 import requests
+import os
 
 from PIL.Image import Image
 from json import JSONDecodeError
@@ -45,6 +46,8 @@ class OnlineClassifier(Classifier):
 
         resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
 
+        os.remove(file)
+
         if resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_BAD_REQUEST:
             print_error("Online Classifier: Bad Request")
             print_debug(resp)
@@ -89,3 +92,6 @@ class OnlineClassifier(Classifier):
         :return: The list of classification results.
         """
         return [self.classify(image) for image in images]
+
+    def __repr__(self):
+        return 'OnlineClassifier'

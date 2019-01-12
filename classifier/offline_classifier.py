@@ -31,3 +31,6 @@ class OfflineClassifier(Classifier):
             classes = [Class(str(class_id), probability) for class_id, probability in enumerate(prediction)]
             classifications.append(ImageClassification(classes))
         return classifications
+
+    def __repr__(self):
+        return 'OfflineClassifier'
