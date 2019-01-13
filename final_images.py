@@ -112,8 +112,8 @@ if __name__ == '__main__':
 
 
         elif method == 'tiles':
-            color1 = (255, 224, 130)
-            color2 = (255, 160, 0)
+            color1 = (255, 82, 82)
+            color2 = (255, 255, 255)
             population_generator = GeneticPopulationGenerator(size=size,
                                                               class_id=class_id,
                                                               steps=args.pre_steps,

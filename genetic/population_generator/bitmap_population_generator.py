@@ -1,4 +1,3 @@
-import numpy as np
 import random as rd
 
 from genetic.population_generator.population_generator import PopulationGenerator

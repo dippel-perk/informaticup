@@ -1,6 +1,6 @@
 import random as rd
 
-from PIL.Image import Image
+from PIL import Image
 
 from config.geometric_individual_configuration import GeometricIndividualConfiguration
 from genetic.geometric.geometric_objects import Circle
@@ -48,7 +48,7 @@ class GeometricMutations:
         return mutate_polygon
 
     @staticmethod
-    def mutate_bitmap_function(img: Image, num_vertical=4, num_horizontal=4):
+    def mutate_bitmap_function(img: Image.Image, num_vertical=4, num_horizontal=4):
         """
         Generates a mutation function which generates the given image with a random color at the same position.
         :param img: The input image.
