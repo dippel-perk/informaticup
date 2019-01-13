@@ -6,7 +6,6 @@ from genetic.population_generator.random_population_generator import RandomPopul
 from genetic.population_generator.train_color_population_generator import TrainColorPopulationGenerator
 from genetic.population_generator.sample_images_rearrange_population_generator import \
     SampleImagesRearrangePopulationGenerator
-from genetic.population_generator.gradient_population_generator import GradientPopulationGenerator
 from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
 from genetic.population_generator.random_brute_force_population_generator import RandomBruteForcePopulationGenerator
 from classifier.online_classifier import OnlineClassifier
@@ -22,7 +21,6 @@ if __name__ == '__main__':
     group.add_argument('--color', action='store_true')
     group.add_argument('--sample', action='store_true')
     group.add_argument('--genetic', action='store_true')
-    group.add_argument('--gradient', action='store_true')
     group.add_argument('--brute-force', action='store_true')
 
     args = parser.parse_args()
@@ -45,11 +43,6 @@ if __name__ == '__main__':
     elif args.sample:
         population_generator = SampleImagesRearrangePopulationGenerator(size=size, target_class=class_id,
                                                                         image_dir=image_path)
-    elif args.gradient:
-        population_generator = GradientPopulationGenerator(size=10, class_id=class_id,
-                                                           population_generator=TrainColorPopulationGenerator(size=50,
-                                                                                                              target_class=class_id,
-                                                                                                              image_dir=image_path))
     elif args.genetic:
         population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=50,
                                                           population_generator=SampleImagesRearrangePopulationGenerator(size=100, target_class=class_id,

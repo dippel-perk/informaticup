@@ -1,12 +1,13 @@
 import random as rd
 
 from PIL.Image import Image
+
 from config.geometric_individual_configuration import GeometricIndividualConfiguration
+from genetic.geometric.geometric_objects import Circle
 from genetic.geometric.geometric_objects import GeometricObject
 from genetic.geometric.geometric_objects import Polygon, Bitmap
-from genetic.geometric.geometric_objects import Circle
 from genetic.geometric.geometric_objects import Tile
-from genetic.population_generator.geometric.tile_population_generator import interpolation_color_generator
+from genetic.population_generator.tile_population_generator import interpolation_color_generator
 
 
 class GeometricMutations:

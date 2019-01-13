@@ -23,3 +23,6 @@ class SampleImagesRearrangePopulationGenerator(PopulationGenerator):
 
             ImageUtilities.rearrange_image(image)
             yield ImageIndividual(image=image)
+
+    def __repr__(self):
+        return "Sample Images Rearrange Population Generator"

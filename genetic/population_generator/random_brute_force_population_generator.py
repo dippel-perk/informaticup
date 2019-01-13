@@ -25,3 +25,6 @@ class RandomBruteForcePopulationGenerator(RandomPopulationGenerator):
             individual = ImageIndividual(image=current_image)
             individual.classification = current_classification
             yield individual
+
+    def __repr__(self):
+        return "Random Brute Force Population Generator"

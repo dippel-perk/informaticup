@@ -8,6 +8,8 @@ from keras.callbacks import ModelCheckpoint
 from PIL.Image import Image
 from typing import List
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 #TODO: Kommentare einfugen.
 
 class NeuralNet:

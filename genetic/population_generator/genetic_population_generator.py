@@ -33,3 +33,6 @@ class GeneticPopulationGenerator(PopulationGenerator):
         for individual in top_population:
             individual.classification = None
             yield individual
+
+    def __repr__(self):
+        return "Genetic Population Generator"

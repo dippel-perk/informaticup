@@ -12,12 +12,12 @@ class RoadSignClassMapper:
         else:
             raise ValueError('Name: {} not found'.format(name))
 
-    def get_name_by_class(self, classId: int):
-        result_df = self.name_class_df[self.name_class_df['ClassId'] == classId]
+    def get_name_by_class(self, class_id: int):
+        result_df = self.name_class_df[self.name_class_df['ClassId'] == class_id]
         if result_df.shape[0] == 1:
             name = result_df.iloc[0]["SignName"]
             if name.startswith('NULL'):
                 return None
             return name
         else:
-            raise ValueError('ClassId: {} not found'.format(classId))
+            raise ValueError('ClassId: {} not found'.format(class_id))

@@ -69,3 +69,6 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
         else:
             color_index = np.random.choice(list(range(len(self._colors))), p=self._probabilities)
             return self._colors[color_index]
+
+    def __repr__(self):
+        return "Train Color Population Generator"

@@ -1,21 +1,21 @@
+import argparse
 import pathlib
 import time
-import argparse
-import pandas as pd
+
 import PIL.ImageOps
+import pandas as pd
+from PIL import Image
+from genetic.population_generator.geometric.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.population_generator.geometric.polygon_population_generator import PolygonPopulationGenerator
 
 from classifier.classifier import Classifier
 from classifier.online_classifier import OnlineClassifier
 from genetic.genetic_algorithm import GeneticAlgorithm
-from genetic.population_generator.sample_images_rearrange_population_generator import SampleImagesRearrangePopulationGenerator
-from genetic.population_generator.geometric.polygon_population_generator import PolygonPopulationGenerator
-from genetic.population_generator.geometric.bitmap_population_generator import BitmapPopulationGenerator
-from genetic.population_generator.geometric.circle_population_generator import CirclePopulationGenerator
-from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
-from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
 from genetic.geometric.geometric_mutations import GeometricMutations
-from PIL import Image
-
+from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
+from genetic.population_generator.circle_population_generator import CirclePopulationGenerator
+from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
+from genetic.population_generator.sample_images_rearrange_population_generator import SampleImagesRearrangePopulationGenerator
 from road_sign_class_mapper import RoadSignClassMapper
 
 if __name__ == '__main__':

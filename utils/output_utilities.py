@@ -1,7 +1,7 @@
 import string
 import sys
 import time
-from colorama import init,Fore, AnsiToWin32
+from colorama import init,Fore,AnsiToWin32
 
 init(autoreset=True)
 

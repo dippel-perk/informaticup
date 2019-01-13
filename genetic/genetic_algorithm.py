@@ -70,27 +70,13 @@ class GeneticAlgorithm:
             population = self._get_current_population()
         return max(self._fitness(x) for x in population)
 
-    def _save_generation(self, step):
+    def _save_generation(self, step) -> None:
         population = self._get_current_population()
         pathlib.Path(self._output_dir, str(step)).mkdir(parents=True, exist_ok=True)
         for idx, individual in enumerate(population):
             individual.image.save(
                 os.path.join(self._output_dir, str(step),
                              '{}_{}.{}'.format(idx, self._fitness(individual), Classifier.DESIRED_IMAGE_EXTENSION)))
-
-    def _pre_evolve(self) -> None:
-        """
-        Method should be called before the current population is evolved.
-        :return: None
-        """
-        pass
-
-    def _post_evolve(self) -> None:
-        """
-        Method should be called after the current population is evolved.
-        :return: None
-        """
-        pass
 
     def _evolve(self) -> None:
         """
@@ -101,8 +87,6 @@ class GeneticAlgorithm:
         """
 
         assert all(individual.image for individual in self._get_current_population())
-
-        self._pre_evolve()
 
         current_population = self._get_current_population()
 
@@ -133,9 +117,7 @@ class GeneticAlgorithm:
         self._compute_fitness()
         self._fitness_history.append(self._grade())
 
-        self._post_evolve()
-
-    def _crossover(self, male: ImageIndividual, female: ImageIndividual):
+    def _crossover(self, male: ImageIndividual, female: ImageIndividual) -> ImageIndividual:
         assert self._combinable(male, female)
         image = ImageUtilities.combine_images(male.image, female.image)
         individual = ImageIndividual(image=image)
@@ -143,14 +125,13 @@ class GeneticAlgorithm:
             individual = self._mutate(individual)
         return individual
 
-    def _mutate(self, individual: ImageIndividual):
+    def _mutate(self, individual: ImageIndividual) -> ImageIndividual:
         pixels = rd.sample(list(range(len(individual))),
                            min(int(len(individual) * self._mutation_intensity), len(individual)))
         ImageUtilities.mutate_pixels(individual.image, pixels)
         return individual
 
-    def _combinable(self, male, female):
-        # TODO: The combinable method might not be the best choice
+    def _combinable(self, male, female) -> bool:
         return male.classification.share_classes(female.classification)
 
     def run(self, initial_population_generator: PopulationGenerator, grade_limit=2.0, steps=100, verbose=True):
