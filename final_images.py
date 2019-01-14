@@ -22,6 +22,7 @@ from genetic.population_generator.sample_images_rearrange_population_generator i
 from road_sign_class_mapper import RoadSignClassMapper
 from utils.image_utilities import ImageUtilities
 from config.classifier_configuration import ClassifierConfiguration
+from genetic.population_generator.existing_population_generator import ExistingPopulationGenerator
 from genetic.population_generator.tile_population_generator import random_color_generator, interpolation_color_generator
 
 if __name__ == '__main__':
@@ -55,10 +56,10 @@ if __name__ == '__main__':
         for line in file:
             if not line.strip():
                 continue
-            class_id, method = [token.strip() for token in line.split(',')]
-            config.append((int(class_id), method))
+            class_id, method, dir = [token.strip() for token in line.split(',')]
+            config.append((int(class_id), method, dir))
 
-    for class_id, method in config:
+    for class_id, method, dir in config:
         print('Class {}'.format(class_id))
         class_name = RoadSignClassMapper().get_name_by_class(class_id)
         if class_name is None:
@@ -121,12 +122,15 @@ if __name__ == '__main__':
             image = Image.open("gi-logo.jpg")
             inverted_image = PIL.ImageOps.invert(image)
             image = inverted_image
+
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
-                                                              population_generator=SingleImagePopulationGenerator(
-                                                                  genetic_size, image),
+                                                              population_generator=SingleImagePopulationGenerator(genetic_size, image),
                                                               algorithm=GeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
+
+            if dir:
+                population_generator = ExistingPopulationGenerator(size=size, dir=dir)
 
             genetic = GeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                        mutation_intensity=mutation_intensity,
@@ -141,11 +145,15 @@ if __name__ == '__main__':
                                                               steps=args.pre_steps,
                                                               population_generator=TilePopulationGenerator(genetic_size,
                                                                                                            color1=color1,
-                                                                                                           color2=color2, interpolate=False),
+                                                                                                           color2=color2,
+                                                                                                           interpolate=False),
                                                               algorithm=GeometricGeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               mutation_function=GeometricMutations.mutate_tile_function(
                                                                   color1, color2, interpolation=False))
+            if dir:
+                population_generator = ExistingPopulationGenerator(size=size, dir=dir)
+
             genetic = GeometricGeneticAlgorithm(classifier=classifier,
                                                 class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
