@@ -8,12 +8,22 @@ from keras.callbacks import ModelCheckpoint
 from PIL.Image import Image
 from typing import List
 
+# disable tensorflow logging
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-#TODO: Kommentare einfugen.
 
 class NeuralNet:
-    def __init__(self, img_size=64, num_classes=43, weights_file=None):
+    """
+    A convolutional neural network that can classify squared images.
+    """
+
+    def __init__(self, img_size: int = 64, num_classes: int = 43, weights_file: str = None):
+        """
+        Constructs a new Neural Network. If the weights file is given, the initial weights are loaded from the file.
+        :param img_size: The size of the images that should be classified (only quadratic images)
+        :param num_classes: The number of possible classes
+        :param weights_file: A .hdf5 file that contains weights for the network
+        """
         self._img_size = img_size
         self._num_classes = num_classes
 
@@ -25,9 +35,20 @@ class NeuralNet:
             self._model.load_weights(weights_file)
 
     def get_model(self):
+        """
+        Returns the undelying Keras model
+        :return: Keras model of the the neural network
+        """
         return self._model
 
-    def train(self, path, validation_split=0.2, epochs=20, batch_size=128):
+    def train(self, path: str, validation_split: float = 0.2, epochs: int = 20, batch_size: int = 128):
+        """
+        Trains the neural network
+        :param path: The folder where the images are located. The folder must contain for each class a folder with the images.
+        :param validation_split: percentage of the data that should be used for validation while training.
+        :param epochs: How many epochs the network should be trained.
+        :param batch_size: The training batch size.
+        """
         datagen = ImageDataGenerator(rescale=1. / 255, validation_split=validation_split)
 
         train_generator = datagen.flow_from_directory(
@@ -55,6 +76,11 @@ class NeuralNet:
                                   validation_steps=validation_generator.samples / batch_size)
 
     def predict(self, images: List[Image]):
+        """
+        Computes the output of the neural network for every image in a single pass.
+        :param images: A list of `n` images that should be classified.
+        :return: A `n * classes` matrix with the prediction results.
+        """
         batch = []
         for img in images:
             batch.append(np.array(img, dtype='float32') / 255)
@@ -62,6 +88,10 @@ class NeuralNet:
         return result
 
     def _build_model(self):
+        """
+        Constructs the Keras model of the neural network.
+        :return: Keras model
+        """
         model = Sequential()
         model.add(Conv2D(32, (3, 3), padding='same',
                          input_shape=(self._img_size, self._img_size, 3),
@@ -87,9 +117,3 @@ class NeuralNet:
         model.add(Dropout(0.5))
         model.add(Dense(self._num_classes, activation='softmax'))
         return model
-
-
-if __name__ == '__main__':
-    net = NeuralNet()
-    prefix = '../../GTSRB/'
-    net.train(os.path.join(prefix, 'Final_Training/Images'))
