@@ -1,3 +1,17 @@
+## Requirements
+* Python version `>= 3.5`
+* Install packages with `pip install -r requirements.txt`
+
+
+## Usage
+
+The program can be run by
+
+`python main.py`
+
+
+
+
 ## InformatiCup
 
 [Website](https://gi.de/informaticup/)
