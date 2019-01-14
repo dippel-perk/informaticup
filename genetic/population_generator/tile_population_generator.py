@@ -24,12 +24,18 @@ def interpolation_color_generator(color1, color2):
                color1[2] - int(d_blue * proportion))
 
 
+def random_color_generator():
+    while True:
+        yield (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
+
+
 class TilePopulationGenerator(PopulationGenerator):
 
-    def __init__(self, size: int, color1, color2, scale_factor=50):
+    def __init__(self, size: int, color1=(255, 82, 82), color2=(255, 255, 255), scale_factor=50, interpolate=True):
         super().__init__(size=size)
         self._color1 = color1
         self._color2 = color2
+        self._interpolate = interpolate
         self._scale_factor = scale_factor
 
     def generate_unit_triangles(self, image_width, image_height):
@@ -65,7 +71,12 @@ class TilePopulationGenerator(PopulationGenerator):
                                              GeometricIndividualConfiguration.IMAGE_DIMENSION[0],
                                              GeometricIndividualConfiguration.IMAGE_DIMENSION[1],
                                              100)
-            colors = interpolation_color_generator(self._color1, self._color2)
+            colors = None
+            if self._interpolate:
+                colors = interpolation_color_generator(self._color1, self._color2)
+            else:
+                colors = random_color_generator()
+
             tiles = [Tile(shape, color) for shape, color in zip(shapes, colors)]
             yield GeometricIndividual(tiles)
 

@@ -5,9 +5,9 @@ import time
 import PIL.ImageOps
 import pandas as pd
 from PIL import Image
-from genetic.population_generator.geometric.bitmap_population_generator import BitmapPopulationGenerator
-from genetic.population_generator.geometric.polygon_population_generator import PolygonPopulationGenerator
-from genetic.population_generator.geometric.tile_population_generator import TilePopulationGenerator
+from genetic.population_generator.bitmap_population_generator import BitmapPopulationGenerator
+from genetic.population_generator.polygon_population_generator import PolygonPopulationGenerator
+from genetic.population_generator.tile_population_generator import TilePopulationGenerator
 
 from classifier.classifier import Classifier
 from classifier.online_classifier import OnlineClassifier
@@ -16,9 +16,12 @@ from genetic.geometric.geometric_mutations import GeometricMutations
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
 from genetic.population_generator.circle_population_generator import CirclePopulationGenerator
 from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
+from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
 from genetic.population_generator.sample_images_rearrange_population_generator import \
     SampleImagesRearrangePopulationGenerator
 from road_sign_class_mapper import RoadSignClassMapper
+from utils.image_utilities import ImageUtilities
+from config.classifier_configuration import ClassifierConfiguration
 
 if __name__ == '__main__':
 
@@ -28,6 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('-ps', '--pre-steps', type=int, default=20)
     parser.add_argument('-id', '--image-dir', type=str, default='../GTSRB/Final_Training/Images')
     parser.add_argument('-sz', '--size', type=int, default=20)
+    parser.add_argument('-mi', '--mutation-intensity', type=float, default=0.1)
     parser.add_argument('-f', '--config', type=str, required=True)
     args = parser.parse_args()
 
@@ -38,7 +42,7 @@ if __name__ == '__main__':
     genetic_size = 100
     data = []
     mutation_rate = 1.0
-    mutation_intensity = 0.1
+    mutation_intensity = args.mutation_intensity
 
     label = None
     made_dir = False
@@ -50,7 +54,7 @@ if __name__ == '__main__':
         for line in file:
             if not line.strip():
                 continue
-            class_id, method = [token.strip() for token in  line.split(',')]
+            class_id, method = [token.strip() for token in line.split(',')]
             config.append((int(class_id), method))
 
     for class_id, method in config:
@@ -100,15 +104,33 @@ if __name__ == '__main__':
             square_size = 5
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
                                                               population_generator=BitmapPopulationGenerator(
-                                                                  genetic_size, image, num_vertical=square_size, num_horizontal=square_size
-                                                                 ),
+                                                                  genetic_size, image, num_vertical=square_size,
+                                                                  num_horizontal=square_size
+                                                              ),
                                                               algorithm=GeometricGeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               mutation_function=GeometricMutations.mutate_bitmap_function(
-                                                                  img=image, num_horizontal=square_size, num_vertical=square_size))
+                                                                  img=image, num_horizontal=square_size,
+                                                                  num_vertical=square_size))
             genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_bitmap_function(img=image))
+
+        elif method == 'gilogo2':
+            image = Image.open("gi-logo.jpg")
+            inverted_image = PIL.ImageOps.invert(image)
+            image = inverted_image
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=SingleImagePopulationGenerator(
+                                                                  genetic_size, image),
+                                                              algorithm=GeneticAlgorithm,
+                                                              mutation_intensity=mutation_intensity,
+                                                              pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
+
+            genetic = GeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
+                                       mutation_intensity=mutation_intensity,
+                                       pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
+            label = 'gilogo2'
 
 
         elif method == 'tiles':
@@ -119,7 +141,7 @@ if __name__ == '__main__':
                                                               steps=args.pre_steps,
                                                               population_generator=TilePopulationGenerator(genetic_size,
                                                                                                            color1=color1,
-                                                                                                           color2=color2),
+                                                                                                           color2=color2, interpolate=False),
                                                               algorithm=GeometricGeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               mutation_function=GeometricMutations.mutate_tile_function(
@@ -138,7 +160,7 @@ if __name__ == '__main__':
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))
 
-        best.image.save('tmp/final/{}_{}.{}'.format(class_id, method, Classifier.DESIRED_IMAGE_EXTENSION))
+        best.image.save('tmp/final/{}_{}.{}'.format(class_id, method, ClassifierConfiguration.DESIRED_IMAGE_EXTENSION))
 
         data.append({
             'class_id': class_id,

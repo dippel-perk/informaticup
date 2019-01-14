@@ -21,7 +21,7 @@ class GeneticAlgorithm:
 
     def __init__(self, classifier: Classifier, class_to_optimize: string, retain_rate: float = 0.2,
                  random_select_rate: float = 0.00, mutation_rate: float = 1.0, mutation_intensity=0.05,
-                 save_generations: bool = True, output_dir: str = None):
+                 save_generations: bool = True, output_dir: str = None, pixel_mutation_function=ImageUtilities.mutate_pixels):
         self._class_to_optimize = class_to_optimize
         self._classifier = classifier
         self._reset_parameters()
@@ -30,6 +30,8 @@ class GeneticAlgorithm:
         self._mutation_rate = mutation_rate
         self._mutation_intensity = mutation_intensity
         self._save_history = save_generations
+        self._pixel_mutation_function = pixel_mutation_function
+
         saved_args = locals()
         if save_generations:
             if output_dir is None:
@@ -129,7 +131,7 @@ class GeneticAlgorithm:
     def _mutate(self, individual: ImageIndividual) -> ImageIndividual:
         pixels = rd.sample(list(range(len(individual))),
                            min(int(len(individual) * self._mutation_intensity), len(individual)))
-        ImageUtilities.mutate_pixels(individual.image, pixels)
+        self._pixel_mutation_function(individual.image, pixels)
         return individual
 
     def _combinable(self, male, female) -> bool:
