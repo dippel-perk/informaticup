@@ -19,7 +19,7 @@ class SingleImagePopulationGenerator(PopulationGenerator):
             data = self._img.getdata()
             min = 0
             max = 255
-            data = [(rd.randint(min,max), rd.randint(min,max), rd.randint(min,max)) if pixel == (0, 0, 0) else (0, 0, 0) for pixel in data]
+            data = [(rd.randint(min,max), rd.randint(min,max), rd.randint(min,max)) if pixel != (0, 0, 0) else (0, 0, 0) for pixel in data]
             img, pixel = ImageUtilities.get_empty_image()
             img.putdata(data)
             yield ImageIndividual(image=img)

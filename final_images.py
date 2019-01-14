@@ -22,6 +22,7 @@ from genetic.population_generator.sample_images_rearrange_population_generator i
 from road_sign_class_mapper import RoadSignClassMapper
 from utils.image_utilities import ImageUtilities
 from config.classifier_configuration import ClassifierConfiguration
+from genetic.population_generator.tile_population_generator import random_color_generator, interpolation_color_generator
 
 if __name__ == '__main__':
 
@@ -132,7 +133,6 @@ if __name__ == '__main__':
                                        pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
             label = 'gilogo2'
 
-
         elif method == 'tiles':
             color1 = (255, 82, 82)
             color2 = (255, 255, 255)
@@ -145,12 +145,13 @@ if __name__ == '__main__':
                                                               algorithm=GeometricGeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               mutation_function=GeometricMutations.mutate_tile_function(
-                                                                  color1, color2))
+                                                                  color1, color2, interpolation=False))
             genetic = GeometricGeneticAlgorithm(classifier=classifier,
                                                 class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_tile_function(color1,
-                                                                                                          color2, interpolation=False))
+                                                                                                          color2,
+                                                                                                          interpolation=False))
 
         start = time.time()
 
@@ -160,7 +161,8 @@ if __name__ == '__main__':
 
         best = max(population, key=lambda x: x.classification.value_for_class(class_name))
 
-        best.image.save('tmp/final/{}_{}.{}'.format(class_id, method, ClassifierConfiguration.DESIRED_IMAGE_EXTENSION))
+        best.image.save(
+            'tmp/final/{}_{}.{}'.format(class_id, method, ClassifierConfiguration.DESIRED_IMAGE_EXTENSION))
 
         data.append({
             'class_id': class_id,
