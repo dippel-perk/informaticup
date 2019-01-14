@@ -12,7 +12,7 @@ class OfflineClassifier(Classifier):
     def __init__(self, weights_file='weights/weights-partial.hdf5'):
         self._neural_net = NeuralNet(weights_file=weights_file)
 
-    def classify(self, image: Image):
+    def classify(self, image: Image) -> ImageClassification:
         """
         Classifies a single image with the substitute network and returns the classification.
         :param image: The input image.
@@ -20,7 +20,7 @@ class OfflineClassifier(Classifier):
         """
         return self.classify_batch([image])[0]
 
-    def classify_batch(self, images: List[Image]):
+    def classify_batch(self, images: List[Image]) -> List[ImageClassification]:
         """
         Classifies a list of images with the substitute network and returns the classifications.
         :param images: The input images.

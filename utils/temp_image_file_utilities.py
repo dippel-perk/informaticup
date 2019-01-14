@@ -3,7 +3,7 @@ import string
 import pathlib as pathlib
 import os.path
 
-from classifier.classifier import Classifier
+from config.classifier_configuration import ClassifierConfiguration
 
 class TempImageFileUtilities:
 
@@ -40,5 +40,5 @@ class TempImageFileUtilities:
 
     @staticmethod
     def __add_prefix_to_file_name(file_name : string):
-        assert not file_name.endswith("."+Classifier.DESIRED_IMAGE_EXTENSION)
-        return file_name + "." + Classifier.DESIRED_IMAGE_EXTENSION
+        assert not file_name.endswith("."+ClassifierConfiguration.DESIRED_IMAGE_EXTENSION)
+        return file_name + "." + ClassifierConfiguration.DESIRED_IMAGE_EXTENSION

@@ -4,7 +4,7 @@ import pandas as pd
 from utils.image_utilities import ImageUtilities
 import os, random
 from road_sign_class_mapper import RoadSignClassMapper
-
+from config.classifier_configuration import ClassifierConfiguration
 
 image_path = '../GTSRB/Final_Training/Images'
 data = []
@@ -20,7 +20,7 @@ for i in range(43):
         file = random.choice(os.listdir(dir_name))
         image = Image.open(os.path.join(dir_name, file))
         image = ImageOps.fit(image,
-                             OnlineClassifier.DESIRED_IMAGE_DIMENSIONS,
+                             ClassifierConfiguration.DESIRED_IMAGE_DIMENSIONS,
                              Image.ANTIALIAS)
         file = ImageUtilities.save_image_to_tempfile(image)
         classification = classifier.classify(file)

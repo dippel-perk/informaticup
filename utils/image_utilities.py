@@ -4,7 +4,7 @@ import string
 from PIL import Image
 import numpy as np
 
-from classifier.classifier import Classifier
+from config.classifier_configuration import ClassifierConfiguration
 from utils.temp_image_file_utilities import TempImageFileUtilities
 
 
@@ -25,8 +25,8 @@ class ImageUtilities:
 
     @staticmethod
     def get_empty_image():
-        return Image.new('RGB', (Classifier.DESIRED_IMAGE_WIDTH, Classifier.DESIRED_IMAGE_HEIGHT)), \
-               Classifier.DESIRED_IMAGE_WIDTH*Classifier.DESIRED_IMAGE_HEIGHT
+        return Image.new('RGB', (ClassifierConfiguration.DESIRED_IMAGE_WIDTH, ClassifierConfiguration.DESIRED_IMAGE_HEIGHT)), \
+               ClassifierConfiguration.DESIRED_IMAGE_WIDTH*ClassifierConfiguration.DESIRED_IMAGE_HEIGHT
 
     @staticmethod
     def mutate_pixel(image : Image.Image, pixel, min = 0, max = 255):

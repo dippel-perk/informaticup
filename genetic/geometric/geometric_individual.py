@@ -4,7 +4,7 @@ from typing import List
 from config.geometric_individual_configuration import GeometricIndividualConfiguration
 from genetic.image_individual import ImageIndividual
 from genetic.geometric.geometric_objects import GeometricObject
-from classifier.classifier import Classifier
+from config.classifier_configuration import ClassifierConfiguration
 
 
 class GeometricIndividual(ImageIndividual):
@@ -25,7 +25,7 @@ class GeometricIndividual(ImageIndividual):
         img = Image.new('RGB', GeometricIndividualConfiguration.IMAGE_DIMENSION)
         for object in self._geometric_objects:
             object.draw(img)
-        img = img.resize(Classifier.DESIRED_IMAGE_DIMENSIONS, resample=Image.ANTIALIAS)
+        img = img.resize(ClassifierConfiguration.DESIRED_IMAGE_DIMENSIONS, resample=Image.ANTIALIAS)
         return img
 
     def get_objects(self) -> List[GeometricObject]:

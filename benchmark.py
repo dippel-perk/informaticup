@@ -8,6 +8,7 @@ from PIL import Image
 from genetic.population_generator.geometric.bitmap_population_generator import BitmapPopulationGenerator
 from genetic.population_generator.geometric.polygon_population_generator import PolygonPopulationGenerator
 
+from config.classifier_configuration import ClassifierConfiguration
 from classifier.classifier import Classifier
 from classifier.online_classifier import OnlineClassifier
 from genetic.genetic_algorithm import GeneticAlgorithm
@@ -116,7 +117,7 @@ if __name__ == '__main__':
             pathlib.Path('tmp/best/{}/'.format(label)).mkdir(parents=True, exist_ok=True)
             made_dir = True
 
-        best.image.save('tmp/best/{}/{}.{}'.format(label, class_id, Classifier.DESIRED_IMAGE_EXTENSION))
+        best.image.save('tmp/best/{}/{}.{}'.format(label, class_id, ClassifierConfiguration.DESIRED_IMAGE_EXTENSION))
 
         data.append({
             'class_id': class_id,

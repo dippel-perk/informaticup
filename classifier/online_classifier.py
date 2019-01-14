@@ -9,11 +9,10 @@ from utils.output_utilities import print_error, print_debug,print_countdown
 from classifier.classifier import Classifier
 from classifier.classification import ImageClassification, Class
 from utils.image_utilities import ImageUtilities
+from config.classifier_configuration import OnlineClassifierConfiguration
 
 
 class OnlineClassifier(Classifier):
-    __API_URL = 'https://phinau.de/trasi'
-    __API_KEY = 'EiCheequoobi0WuPhai3saiLud4ailep'
 
     __API_RESPONSE_CODE_TOO_MANY_REQUESTS = 429
     __API_RESPONSE_CODE_BAD_REQUEST = 400
@@ -27,7 +26,7 @@ class OnlineClassifier(Classifier):
         self._time_start = 0
         self._counter = 0
 
-    def classify(self, image: Image):
+    def classify(self, image: Image) -> ImageClassification:
         """
         Classifies a single image with the online network and returns the classification.
         I case of an error an error message gets printed to the terminal and an exception might be thrown.
@@ -41,10 +40,10 @@ class OnlineClassifier(Classifier):
 
         file = ImageUtilities.save_image_to_tempfile(image)
 
-        data = {'key': OnlineClassifier.__API_KEY}
+        data = {'key': OnlineClassifierConfiguration.API_KEY}
         files = {'image': open(file, 'rb')}
 
-        resp = requests.post(OnlineClassifier.__API_URL, data=data, files=files)
+        resp = requests.post(OnlineClassifierConfiguration.API_URL, data=data, files=files)
 
         os.remove(file)
 
@@ -55,7 +54,7 @@ class OnlineClassifier(Classifier):
 
         elif resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_UNAUTHORIZED:
             print_error("Online Classifier: Unauthorized Request")
-            print_debug("Used API key: " + OnlineClassifier.__API_KEY)
+            print_debug("Used API key: " + OnlineClassifierConfiguration.API_KEY)
             raise ConnectionRefusedError("Unauthorized Request")
 
         elif resp.status_code == OnlineClassifier.__API_RESPONSE_CODE_SERVICE_UNAVAILABLE:
@@ -85,7 +84,7 @@ class OnlineClassifier(Classifier):
 
         return ImageClassification(classes)
 
-    def classify_batch(self, images: List[Image]):
+    def classify_batch(self, images: List[Image]) -> List[ImageClassification]:
         """
         Classifies a list of images with the online network and returns the classifications.
         :param images: The input images.

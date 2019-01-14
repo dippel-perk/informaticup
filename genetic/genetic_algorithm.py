@@ -1,15 +1,16 @@
+import string
+import os
+import datetime
+import pathlib
+import random as rd
+
+from config.classifier_configuration import ClassifierConfiguration
 from classifier.classifier import Classifier
 from genetic.image_individual import ImageIndividual
 from typing import List
 from genetic.population_generator.population_generator import PopulationGenerator
 from utils.image_utilities import ImageUtilities
-import string
-import os
-import datetime
-import pathlib
 
-import random as rd
-import time
 
 
 class GeneticAlgorithm:
@@ -76,7 +77,7 @@ class GeneticAlgorithm:
         for idx, individual in enumerate(population):
             individual.image.save(
                 os.path.join(self._output_dir, str(step),
-                             '{}_{}.{}'.format(idx, self._fitness(individual), Classifier.DESIRED_IMAGE_EXTENSION)))
+                             '{}_{}.{}'.format(idx, self._fitness(individual), ClassifierConfiguration.DESIRED_IMAGE_EXTENSION)))
 
     def _evolve(self) -> None:
         """

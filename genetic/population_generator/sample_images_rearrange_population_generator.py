@@ -4,7 +4,7 @@ from PIL import Image, ImageOps
 from genetic.population_generator.population_generator import PopulationGenerator
 from genetic.image_individual import ImageIndividual
 from utils.image_utilities import ImageUtilities
-from classifier.classifier import Classifier
+from config.classifier_configuration import ClassifierConfiguration
 
 class SampleImagesRearrangePopulationGenerator(PopulationGenerator):
 
@@ -18,7 +18,7 @@ class SampleImagesRearrangePopulationGenerator(PopulationGenerator):
         for file in files:
             image = Image.open(os.path.join(self._directory, file))
             image = ImageOps.fit(image,
-                                 Classifier.DESIRED_IMAGE_DIMENSIONS,
+                                 ClassifierConfiguration.DESIRED_IMAGE_DIMENSIONS,
                                  Image.ANTIALIAS)
 
             ImageUtilities.rearrange_image(image)

@@ -33,7 +33,12 @@ class TilePopulationGenerator(PopulationGenerator):
         self._scale_factor = scale_factor
 
     def generate_unit_triangles(self, image_width, image_height):
-        """Generate coordinates for a tiling of unit triangles."""
+        """
+        Generate coordinates for a tiling of unit triangles.
+        :param image_width: The image width.
+        :param image_height: The image height.
+        :return: Yields all triangles of the image.
+        """
         h = math.sin(math.pi / 3)
 
         # The first triangle starts beyond the left-hand side of the image,
