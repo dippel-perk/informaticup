@@ -7,7 +7,7 @@ from genetic.geometric.geometric_objects import Circle
 from genetic.geometric.geometric_objects import GeometricObject
 from genetic.geometric.geometric_objects import Polygon, Bitmap
 from genetic.geometric.geometric_objects import Tile
-from genetic.population_generator.tile_population_generator import interpolation_color_generator
+from genetic.population_generator.tile_population_generator import interpolation_color_generator, random_color_generator
 
 
 class GeometricMutations:
@@ -69,7 +69,7 @@ class GeometricMutations:
         return mutate_bitmap
 
     @staticmethod
-    def mutate_tile_function(color1, color2):
+    def mutate_tile_function(color1=(255, 82, 82), color2=(255, 255, 255), interpolation=True):
         """
         Generates a mutation function which assigns a random color to the given tile.
         :param img: The input image.
@@ -77,7 +77,12 @@ class GeometricMutations:
         """
 
         def mutate_tile(object: GeometricObject):
-            color_generator = interpolation_color_generator(color1, color2)
+            color_generator = None
+            if interpolation:
+                color_generator = interpolation_color_generator(color1, color2)
+            else:
+                color_generator = random_color_generator()
+
             tile = Tile(coordinates=object.coordinates, color=next(color_generator))
             return tile
 

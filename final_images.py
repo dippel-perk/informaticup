@@ -150,7 +150,7 @@ if __name__ == '__main__':
                                                 class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_tile_function(color1,
-                                                                                                          color2))
+                                                                                                          color2, interpolation=False))
 
         start = time.time()
 
