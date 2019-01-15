@@ -21,7 +21,7 @@ from genetic.population_generator.sample_images_rearrange_population_generator i
 from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
 from genetic.population_generator.tile_population_generator import TilePopulationGenerator
 from utils.image_utilities import ImageUtilities
-from utils.road_sign_class_mapper_utilities import RoadSignClassMapper
+from utils.road_sign_class_mapper_utilities import RoadSignClassMapperUtilities
 
 if __name__ == '__main__':
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     for class_id, method, dir in config:
         print('Class {}'.format(class_id))
-        class_name = RoadSignClassMapper().get_name_by_class(class_id)
+        class_name = RoadSignClassMapperUtilities.get_name_by_class(class_id)
         if class_name is None:
             continue
 
@@ -115,6 +115,22 @@ if __name__ == '__main__':
             genetic = GeometricGeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_bitmap_function(img=image))
+        elif method == 'apple':
+            image = Image.open("images/apple5.jpg")
+            population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
+                                                              population_generator=SingleImagePopulationGenerator(
+                                                                  genetic_size, image),
+                                                              algorithm=GeneticAlgorithm,
+                                                              mutation_intensity=mutation_intensity,
+                                                              pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
+
+            if dir:
+                population_generator = ExistingPopulationGenerator(size=size, dir=dir)
+
+            genetic = GeneticAlgorithm(classifier=classifier, class_to_optimize=class_name,
+                                       mutation_intensity=mutation_intensity,
+                                       pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)
+            label = 'apple'
 
         elif method == 'gilogo2':
             image = Image.open("gi-logo.jpg")
