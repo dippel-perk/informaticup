@@ -19,10 +19,10 @@ if __name__ == '__main__':
     genetic_population_parser = subparsers.add_parser("substitute",
                                                       help=ProgramArgumentsConfiguration.SUBSTITUTE_DESCRIPTION)
 
-    genetic_population_parser.add_argument("-gpn", "--genetic-population-size",
+    genetic_population_parser.add_argument("-spn", "--substitute-population-size",
                                            type=int,
                                            help=ProgramArgumentsConfiguration.SUBSTITUTE_POPULATION_SIZE_DESCRIPTION)
-    genetic_population_parser.add_argument("-gps", "--genetic-population-steps",
+    genetic_population_parser.add_argument("-sps", "--substitute-population-steps",
                                            type=int,
                                            default=20,
                                            help=ProgramArgumentsConfiguration.SUBSTITUTE_STEPS_DESCRIPTION)
@@ -79,6 +79,12 @@ if __name__ == '__main__':
                         type=ProgramArgumentsConfiguration.gtsrb_path,
                         help=ProgramArgumentsConfiguration.RANDOM_SELECT_RATE_DESCRIPTION)
 
+    parser.add_argument('--image',
+                        default='resources/apple.jpg',
+                        required=False,
+                        type=ProgramArgumentsConfiguration.image_file,
+                        help=ProgramArgumentsConfiguration.IMAGE_PATH_DESCRIPTION)
+
     parser.add_argument('-o', '--out',
                         required=False,
                         type=str,
@@ -105,19 +111,16 @@ if __name__ == '__main__':
     group.add_argument('--polygon',
                        action='store_true',
                        help=ProgramArgumentsConfiguration.POLYGON_POPULATION_GENERATOR_DESCRIPTION)
-    group.add_argument('--gilogo',
+    group.add_argument('--image-grid',
                        action='store_true',
-                       help=ProgramArgumentsConfiguration.GILOGO_POPULATION_GENERATOR_DESCRIPTION)
+                       help=ProgramArgumentsConfiguration.GRID_IMAGE_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--single-image',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.SINGLE_IMAGE_POPULATION_GENERATOR_DESCRIPTION)
     group.add_argument('--tiles',
                        action='store_true',
                        help=ProgramArgumentsConfiguration.TILE_POPULATION_GENERATOR_DESCRIPTION)
-    group.add_argument('--snowflake',
-                       action='store_true',
-                       help=ProgramArgumentsConfiguration.SNOWFLAKE_POPULATION_GENERATOR_DESCRIPTION)
 
-    group.add_argument('--batman',
-                       action='store_true',
-                       help=ProgramArgumentsConfiguration.BATMAN_POPULATION_GENERATOR_DESCRIPTION)
 
 
     args = parser.parse_args()
@@ -145,6 +148,7 @@ if __name__ == '__main__':
                                    mutation_rate=args.mutation_rate,
                                    mutation_intensity=args.mutation_intensity,
                                    random_select_rate=args.random_select_rate,
+                                   pixel_mutation_function=mutation_function,
                                    output_dir=args.out)
 
     try:

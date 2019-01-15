@@ -18,6 +18,7 @@ from genetic.population_generator.train_color_population_generator import TrainC
 from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
 from utils.image_utilities import ImageUtilities
 from utils.road_sign_class_mapper_utilities import RoadSignClassMapperUtilities
+from utils.output_utilities import print_error
 
 
 class ProgramArgumentUtilities:
@@ -51,7 +52,6 @@ class ProgramArgumentUtilities:
 
         # Will be set if necessary
         mutation_function = None
-        genetic_population_generator_mutation_intensity = 0.1
         genetic_algorithm = GradeAverageGeneticAlgorithm
 
         image_path = args.gtsrb_image_path
@@ -60,10 +60,10 @@ class ProgramArgumentUtilities:
             size = args.population_size
         elif args.population_generator == ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR:
 
-            if args.genetic_population_size is None:
+            if args.substitute_population_size is None:
                 size = args.population_size * 3
             else:
-                size = args.genetic_population_size
+                size = args.substitute_population_size
 
         else:
             raise ValueError("Please chose either genetic or non-genetic population generation.")
@@ -86,18 +86,19 @@ class ProgramArgumentUtilities:
             population_generator = CirclePopulationGenerator(size=size)
             genetic_algorithm = GeometricGeneticAlgorithm
             mutation_function = GeometricMutations.mutate_circle_function()
-            genetic_population_generator_mutation_intensity = 0.05
 
         elif args.polygon:
             population_generator = PolygonPopulationGenerator(size=size)
             genetic_algorithm = GeometricGeneticAlgorithm
             mutation_function = GeometricMutations.mutate_polygon_function(n=3)
-            genetic_population_generator_mutation_intensity = 0.05
 
-        elif args.gilogo:
-            image = Image.open("./resources/gi-logo.jpg")
-            inverted_image = ImageOps.invert(image)
-            image = inverted_image.convert("1")
+        elif args.image_grid:
+
+            if args.image is None:
+                print_error("You have to provide an --image when using the image-grid option")
+                exit()
+            image = Image.open(args.image)
+            image = image.convert("1")
             square_size = 5
             population_generator = BitmapPopulationGenerator(size=size,
                                                              img=image,
@@ -109,32 +110,16 @@ class ProgramArgumentUtilities:
             mutation_function = GeometricMutations.mutate_bitmap_function(img=image,
                                                                           num_horizontal=square_size,
                                                                           num_vertical=square_size)
-            genetic_population_generator_mutation_intensity = 0.05
 
-        elif args.snowflake:
-            image = Image.open("resources/snowflake.jpeg")
-            inverted_image = ImageOps.invert(image)
-            image = inverted_image.convert("1")
-            square_size = 5
-            population_generator = BitmapPopulationGenerator(size=size,
-                                                             img=image,
-                                                             num_horizontal=square_size,
-                                                             num_vertical=square_size)
+        elif args.single_image:
+            if args.image is None:
+                print_error("You have to provide an --image when using the single-image option")
+                exit()
 
-            genetic_algorithm = GeometricGeneticAlgorithm
-
-            mutation_function = GeometricMutations.mutate_bitmap_random_function(img=image,
-                                                                          num_horizontal=square_size,
-                                                                          num_vertical=square_size)
-            genetic_population_generator_mutation_intensity = 0.05
-
-        elif args.batman:
-            image = Image.open("resources/gi-logo.jpg")
+            image = Image.open(args.image)
             population_generator = SingleImagePopulationGenerator(size=size, img=image)
 
-
-            mutation_function =  ImageUtilities.mutate_non_dark_pixels
-            genetic_population_generator_mutation_intensity = 0.05
+            mutation_function = ImageUtilities.mutate_non_dark_pixels
 
         elif args.tiles:
             # TODO: DIESE COLORS RANDOM
@@ -147,18 +132,17 @@ class ProgramArgumentUtilities:
 
             genetic_algorithm = GeometricGeneticAlgorithm
             mutation_function = GeometricMutations.mutate_tile_function(color1, color2)
-            genetic_population_generator_mutation_intensity = 0.05
-
         else:
             raise ValueError("Please provide a valid population generation method.")
 
         if args.population_generator == ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR:
             population_generator = GeneticPopulationGenerator(size=args.population_size,
                                                               class_id=class_id,
-                                                              steps=args.genetic_population_steps,
+                                                              steps=args.substitute_population_steps,
                                                               population_generator=population_generator,
                                                               algorithm=genetic_algorithm,
-                                                              mutation_intensity=genetic_population_generator_mutation_intensity,
-                                                              mutation_function=mutation_function)
+                                                              mutation_intensity=args.mutation_intensity,
+                                                              mutation_function=mutation_function,
+                                                              pixel_mutation_function=mutation_function)
 
         return (class_id, class_name, population_generator, mutation_function, genetic_algorithm)
