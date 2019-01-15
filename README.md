@@ -103,7 +103,7 @@ The target class name or target class id.
 * `--mutation-intensity` The mutation intensity which should be used.
 * `--random-select-rate` The percentage of individuals which should be randomly added to the next generation.
 * `--gtsrb-image-path` The path to the German Traffic Sign Recognition Benchmark. The images of the benchmark are used in some population generators.
-* `--image` A path to a .jpg or .jpeg image. The file will be used for the grid image or single image population generators. The background must be black and the foreground should be white.
+* `--image` A path to a .jpg or .jpeg image. The file will be used for the grid image or single image population generators. The background must be black and the foreground should be white. The `resources` directory contains a few example images that you can use.
 * `--out` A complete history of all computed generations will be saved to an output directory. If none is provided, a standard directory is chosen.
 * What follows are the available population generators. The population generator might have influence on the mutation and crossover function. At least one population generator has to be chosen from the set of possibilities.
   * `--rand` Generates a population of random image individuals.
