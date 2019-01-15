@@ -19,10 +19,10 @@ if __name__ == '__main__':
     genetic_population_parser = subparsers.add_parser("substitute",
                                                       help=ProgramArgumentsConfiguration.SUBSTITUTE_DESCRIPTION)
 
-    genetic_population_parser.add_argument("-gpn", "--genetic-population-size",
+    genetic_population_parser.add_argument("-spn", "--substitute-population-size",
                                            type=int,
                                            help=ProgramArgumentsConfiguration.SUBSTITUTE_POPULATION_SIZE_DESCRIPTION)
-    genetic_population_parser.add_argument("-gps", "--genetic-population-steps",
+    genetic_population_parser.add_argument("-sps", "--substitute-population-steps",
                                            type=int,
                                            default=20,
                                            help=ProgramArgumentsConfiguration.SUBSTITUTE_STEPS_DESCRIPTION)
