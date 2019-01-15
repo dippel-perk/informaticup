@@ -43,7 +43,7 @@ class ProgramArgumentsConfiguration:
                                              "use the most fit n individuals of the substitute network as an initial " \
                                              "population of the genetic algorithm. If the variable is not set, we use " \
                                              "the size 3n."
-    SUBSTITUTE_STEPS_DESCRIPTION = "Determines the amount of steps which should be performed on the substitute network."
+    SUBSTITUTE_STEPS_DESCRIPTION = "Determines the amount of steps (i.e. generations), which should be computed by the genetic algorithm on the substitute network."
 
     RAND_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of random image individuals."
     COLOR_POPULATION_GENERATOR_DESCRIPTION = "Generates a population with the same color distribution as some random training images"
@@ -53,8 +53,8 @@ class ProgramArgumentsConfiguration:
     POLYGON_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of geometric individuals which contain random polygons. We restricted the polygons to be triangles."
     TILE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population with geometric individuals. Every individual is completely filled with so called tiles."
 
-    GRID_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of the given image on a grid with different color."
-    SINGLE_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of the given image filled with random pixels."
+    GRID_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population where each individual has 25 copies of the selected image (see --image) on a 5x5 grid with different color."
+    SINGLE_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population where each individual has the selected image (see --image) in its center. The white portions of the image are then filled with random pixels."
 
     @staticmethod
     def percentage_float(x):

@@ -26,6 +26,19 @@ To change the `python` command you can place an alias into `~/.bashrc` or `~/.ba
 ```
 alias python=python3
 ```
+## Example
+
+The following command will compute an image for the target class with the id 2. The genetic algorithm will use the substitute network results as its initial population. The substitute network will use a random circle generator as its initial population. The genetic algorithm will terminate after 20 steps and save its output to the `result` directory.
+
+```
+python main.py -t 2 -s 20 --circle --out result substitute
+```
+
+The same command can be executed with a confidence limit. The genetic algorithm will terminate when the confidence limit of 99% is reached.
+
+```
+python3 main.py -t 2 -c 0.99 -s 20 --circle --out result substitute
+```
 
 ## Usage
 
@@ -37,48 +50,46 @@ main.py [-h] -t TARGET [-c CONFIDENCE] [-s STEPS]
                [--mutation-rate MUTATION_RATE]
                [--mutation-intensity MUTATION_INTENSITY]
                [--random-select-rate RANDOM_SELECT_RATE]
-               [--gtsrb-image-path GTSRB_IMAGE_PATH] [-o OUT]
-               (--rand | --color | --sample | --brute-force | --circle | --polygon | --gilogo | --tiles)
+               [--gtsrb-image-path GTSRB_IMAGE_PATH] [--image IMAGE] [-o OUT]
+               (--rand | --color | --sample | --brute-force | --circle | --polygon | --image-grid | --single-image | --tiles)
                {substitute} ...
 ```
 
 When adding the substitute command at the **end** of the arguments you will have two additional parameters
 
 ```
-main.py [...] substitute [-gpn GENETIC_POPULATION_SIZE]
-                          [-gps GENETIC_POPULATION_STEPS]
+main.py [...] substitute [-h] [-spn SUBSTITUTE_POPULATION_SIZE]
+                          [-sps SUBSTITUTE_POPULATION_STEPS]
 ```
 
 ### Arguments
 
-1. `-t --target`
+* `-t --target`
 The target class name or target class id.
-1. `-s --steps` The maximum number of steps, i.e. the number of the generations the algorithm will evolve.
-1. `-c --confidence` The desired confidence. The algorithm will terminate, when the confidence is reached by at least one generated image. If no confidence is provided by the user, the algorithm will run the maximum number of steps. The confidence must be in range [0,1].
-1. `--population-size` The desired population size. Every generation of the genetic algorithm will have this many individuals.
-1. `--mutation-rate` The mutation rate which should be used.
-1. `--mutation-intensity` The mutation intensity which should be used.
-1. `--random-select-rate` The percentage of individuals which should be randomly added to the next generation.
-1. `--gtsrb-image-path` The path to the German Traffic Sign Recognition Benchmark. The images of the benchmark are used in some population generators.
-1. `--out` A complete history of all computed generations will be saved to an output directory. If no directory is provided, a standard directory is chosen.
-1. What follows are the available population generators. The population generator might have influence on the mutation and crossover function. At least one population generator has to be chosen from the set of possibilities.
-  1. `--rand` Generates a population of random image individuals.
-  1. `--color` Generates a population with the same color distribution as some random training images.
-  1. `--sample` Generates a population, which contains rearrangements of training set images.
-  1. `--brute-force` Generates a population of random image individuals, while ensuring that each individual's classification contains the target class. To achieve this, new images are generated until the target class is part of the classification.
-  1. `--circle` Generates population of geometric individuals, which are filled with random circles.
-  1. `--polygon` Generates a population of geometric individuals which contain random polygons. We restricted the polygons to be triangles.
-  1. `--gilogo` To come
-  1. `--tiles` Generates a population with geometric individuals. Every individual is completely filled with so called tiles.
-  1. `--snowflakes`
+* `-s --steps` The maximum number of steps, i.e. the number of the generations the algorithm will evolve.
+* `-c --confidence` The desired confidence. The algorithm will terminate, when the confidence is reached by at least one generated image. If no confidence is provided by the user, the algorithm will run the maximum number of steps. The confidence must be in range [0,1].
+* `--population-size` The desired population size. Every generation of the genetic algorithm will have this many individuals.
+* `--mutation-rate` The mutation rate which should be used.
+* `--mutation-intensity` The mutation intensity which should be used.
+* `--random-select-rate` The percentage of individuals which should be randomly added to the next generation.
+* `--gtsrb-image-path` The path to the German Traffic Sign Recognition Benchmark. The images of the benchmark are used in some population generators.
+* `--image` A path to a .jpg or .jpeg image. The file will be used for the grid image or single image population generators. The background must be black and the foreground should be white.
+* `--out` A complete history of all computed generations will be saved to an output directory. If no directory is provided, a standard directory is chosen.
+* What follows are the available population generators. The population generator might have influence on the mutation and crossover function. At least one population generator has to be chosen from the set of possibilities.
+  * `--rand` Generates a population of random image individuals.
+  * `--color` Generates a population with the same color distribution as some random training images.
+  * `--sample` Generates a population, which contains rearrangements of training set images.
+  * `--brute-force` Generates a population of random image individuals, while ensuring that each individual's classification contains the target class. To achieve this, new images are generated until the target class is part of the classification.
+  * `--circle` Generates population of geometric individuals, which are filled with random circles.
+  * `--polygon` Generates a population of geometric individuals which contain random polygons. We restricted the polygons to be triangles.
+  * `--image-grid` Generates a population where each individual has 25 copies of the selected image (see `--image`) on a 5x5 grid with different color.
+  * `--single-image` Generates a population where each individual has the selected image (see `--image`) in its center. The white portions of the image are then filled with random pixels.
+  * `--tiles` Generates a population with geometric individuals. Every individual is completely filled with so called tiles.
 
 If the substitute command was added, the selected population generator will be the initial population generator for the substitute network. The tool will evolve this population to a state where the substitute network classifies the individuals to be most likely in the target class. The `substitute` has to be added **after** the arguments above. If added, the user has two additional arguments.
 
-1. `-gpn --genetic-population-size` The population size which should be used by the substitute network. The size has to be larger than `--population-size` *n*, because we want to use the most fit *n* individuals of the substitute network as an initial population of the genetic algorithm. If the variable is not set, we use the size 3*n*.
-1. `-gps --genetic-population-steps` Determines the amount of steps which should be performed on the substitute network.
-
-
-
+1. `-spn --substitute-population-size` The population size which should be used by the substitute network. The size has to be larger than `--population-size` *n*, because we want to use the most fit *n* individuals of the substitute network as an initial population of the genetic algorithm. If the variable is not set, we use the size 3*n*.
+1. `-sps --substitute-population-steps` Determines the amount of steps (i.e. generations), which should be computed by the genetic algorithm on the substitute network.
 
 ### Help
 
@@ -88,14 +99,11 @@ For further help review the help pages
 
 ## Authors
 
-* **Jonas Dippel**
-* **Michael Perk**
+* **Jonas Dippel** - j.dippel@campus.tu-berlin.de
+* **Michael Perk** - m.perk@tu-bs.de
 
-## InformatiCup
+## Additional Information
 
-[Website](https://gi.de/informaticup/)
+[InformatiCup Website](https://gi.de/informaticup/)
 
-[Aufgabenstellung](https://gi.de/fileadmin/GI/Hauptseite/Aktuelles/Wettbewerbe/InformatiCup/InformatiCup2019-Irrbilder.pdf)
-
-
-Api Key: EiCheequoobi0WuPhai3saiLud4ailep
+[Task](https://gi.de/fileadmin/GI/Hauptseite/Aktuelles/Wettbewerbe/InformatiCup/InformatiCup2019-Irrbilder.pdf)
