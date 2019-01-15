@@ -60,10 +60,10 @@ class ProgramArgumentUtilities:
             size = args.population_size
         elif args.population_generator == ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR:
 
-            if args.genetic_population_size is None:
+            if args.substitute_population_size is None:
                 size = args.population_size * 3
             else:
-                size = args.genetic_population_size
+                size = args.substitute_population_size
 
         else:
             raise ValueError("Please chose either genetic or non-genetic population generation.")
@@ -138,7 +138,7 @@ class ProgramArgumentUtilities:
         if args.population_generator == ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR:
             population_generator = GeneticPopulationGenerator(size=args.population_size,
                                                               class_id=class_id,
-                                                              steps=args.genetic_population_steps,
+                                                              steps=args.substitute_population_steps,
                                                               population_generator=population_generator,
                                                               algorithm=genetic_algorithm,
                                                               mutation_intensity=args.mutation_intensity,
