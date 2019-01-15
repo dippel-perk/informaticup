@@ -122,16 +122,12 @@ class ProgramArgumentUtilities:
             mutation_function = ImageUtilities.mutate_non_dark_pixels
 
         elif args.tiles:
-            # TODO: DIESE COLORS RANDOM
-            color1 = (255, 224, 130)
-            color2 = (255, 160, 0)
 
             population_generator = TilePopulationGenerator(size=size,
-                                                           color1=color1,
-                                                           color2=color2)
+                                                           interpolate=False)
 
             genetic_algorithm = GeometricGeneticAlgorithm
-            mutation_function = GeometricMutations.mutate_tile_function(color1, color2)
+            mutation_function = GeometricMutations.mutate_tile_function(interpolation=False)
         else:
             raise ValueError("Please provide a valid population generation method.")
 

@@ -27,25 +27,20 @@ class TilePopulationGenerator(PopulationGenerator):
         """
         h = math.sin(math.pi / 3)
 
-        # The first triangle starts beyond the left-hand side of the image,
-        # and is only partially visible.  This lets us cover the whole image.
-        # Likewise we add an extra row to cover the bottom.
         for x in range(-1, image_width):
             for y in range(int(image_height / h) + 1):
-                # Add a horizontal offset on odd numbered rows
                 x_ = x if (y % 2 == 0) else x + 0.5
 
                 yield [(x_, y * h), (x_ + 1, y * h), (x_ + 0.5, (y + 1) * h)]
                 yield [(x_ + 1, y * h), (x_ + 1.5, (y + 1) * h), (x_ + 0.5, (y + 1) * h)]
 
     def _scale_coordinates(self, generator, image_width, image_height, side_length=1):
-        # TODO: FILL
         """
-
+        Scales the unit triangles to the supplied side length
         :param generator: The coordinate generator
-        :param image_width:
-        :param image_height:
-        :param side_length:
+        :param image_width: The image width
+        :param image_height: The image height
+        :param side_length: Side length of the triangles
         :return:
         """
         scaled_width = int(image_width / side_length) + 2
