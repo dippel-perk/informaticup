@@ -1,12 +1,12 @@
-import numpy as np
 import os.path
+from typing import List
 
-from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
+import numpy as np
+from PIL.Image import Image
 from keras import Sequential
 from keras.callbacks import ModelCheckpoint
-from PIL.Image import Image
-from typing import List
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
+from keras.preprocessing.image import ImageDataGenerator
 
 # disable tensorflow logging
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

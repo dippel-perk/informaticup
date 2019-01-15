@@ -1,13 +1,16 @@
 import random as rd
+
 import numpy as np
+from PIL import Image, ImageDraw
 
 from config.geometric_individual_configuration import GeometricIndividualConfiguration
-from PIL import Image, ImageDraw
+
 
 class GeometricObject:
     """
     Base class for geometric objects.
     """
+
     def draw(self, image: Image) -> None:
         """
         This method should be implemented by the subclasses. It should generate the current geometric object
@@ -16,6 +19,7 @@ class GeometricObject:
         :return: None
         """
         raise NotImplementedError
+
 
 class Circle(GeometricObject):
     def __init__(self, x, y, radius, color):
@@ -36,7 +40,6 @@ class Circle(GeometricObject):
 
     @staticmethod
     def generate(avg_radius: int, std_radius: int):
-        #TODO: Return Circle geht nicht?
         """
         Generates a circle based on an expected radius and a standard distribution
         at a random position with a random color.
@@ -49,7 +52,7 @@ class Circle(GeometricObject):
         radius = max(np.random.normal(avg_radius, std_radius), 0)
         color = (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
         return Circle(x=x, y=y, radius=radius, color=color)
-        
+
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.radius == other.radius and self.color == other.color
 
@@ -87,7 +90,6 @@ class Bitmap(GeometricObject):
 
 
 class Tile(GeometricObject):
-
     def __init__(self, coordinates, color):
         self.coordinates = coordinates
         self.color = color
@@ -100,5 +102,3 @@ class Tile(GeometricObject):
         """
         draw = ImageDraw.Draw(image)
         draw.polygon(self.coordinates, fill=self.color)
-
-

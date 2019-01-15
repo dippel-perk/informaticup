@@ -1,5 +1,6 @@
 from PIL import Image
 
+
 class ImageIndividual:
     def __init__(self, image: Image):
         self.image = image

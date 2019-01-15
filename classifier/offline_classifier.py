@@ -1,14 +1,17 @@
-from classifier.neural_net import NeuralNet
-from PIL.Image import Image
-from classifier.classifier import Classifier
-from classifier.classification import Class, ImageClassification
 from typing import List
+
+from PIL.Image import Image
+
+from classifier.classification import Class, ImageClassification
+from classifier.classifier import Classifier
+from classifier.neural_net import NeuralNet
 
 
 class OfflineClassifier(Classifier):
     """
     Offline classifier calls the substitute network to classify given images.
     """
+
     def __init__(self, weights_file='weights/weights-partial.hdf5'):
         self._neural_net = NeuralNet(weights_file=weights_file)
 

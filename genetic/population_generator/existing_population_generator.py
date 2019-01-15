@@ -1,11 +1,12 @@
-from genetic.population_generator.population_generator import PopulationGenerator
-from genetic.image_individual import ImageIndividual
-from PIL import Image
 import os
+
+from PIL import Image
+
+from genetic.image_individual import ImageIndividual
+from genetic.population_generator.population_generator import PopulationGenerator
 
 
 class ExistingPopulationGenerator(PopulationGenerator):
-
     def __init__(self, size: int, dir):
         super().__init__(size=size)
         self.dir = dir

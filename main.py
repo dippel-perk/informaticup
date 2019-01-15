@@ -1,28 +1,34 @@
 import argparse
+import os
 
-import PIL.ImageOps
-from PIL import Image
-from genetic.population_generator.bitmap_population_generator import BitmapPopulationGenerator
-from genetic.population_generator.polygon_population_generator import PolygonPopulationGenerator
-from genetic.population_generator.tile_population_generator import TilePopulationGenerator
-
-from classifier.online_classifier import OnlineClassifier
-from config.program_arguments_configuration import ProgramArgumentsConfiguration
+from classifier.classifer_mock import ClassifierMock
+from config.program_argument_configuration import ProgramArgumentsConfiguration
+from config.program_argument_utilities_configuration import ProgramArgumentUtilitiesConfiguration
 from genetic.genetic_algorithm import GeneticAlgorithm
-from genetic.geometric.geometric_mutations import GeometricMutations
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
-from genetic.population_generator.circle_population_generator import CirclePopulationGenerator
-from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
-from genetic.population_generator.population_generator import PopulationGenerator
-from genetic.population_generator.random_brute_force_population_generator import RandomBruteForcePopulationGenerator
-from genetic.population_generator.random_population_generator import RandomPopulationGenerator
-from genetic.population_generator.sample_images_rearrange_population_generator import \
-    SampleImagesRearrangePopulationGenerator
-from genetic.population_generator.train_color_population_generator import TrainColorPopulationGenerator
+from utils.output_utilities import print_error, print_variable, print_info, print_space, make_bold
+from utils.program_argument_utilities import ProgramArgumentUtilities
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description=ProgramArgumentsConfiguration.PROGRAM_DESCRIPTION)
+    parser.set_defaults(population_generator=ProgramArgumentUtilitiesConfiguration.DEFAULT_POPULATION_GENERATOR)
+
+    subparsers = parser.add_subparsers()
+
+    genetic_population_parser = subparsers.add_parser("substitute",
+                                                      help=ProgramArgumentsConfiguration.SUBSTITUTE_DESCRIPTION)
+
+    genetic_population_parser.add_argument("-gpn", "--genetic-population-size",
+                                           type=int,
+                                           help=ProgramArgumentsConfiguration.SUBSTITUTE_POPULATION_SIZE_DESCRIPTION)
+    genetic_population_parser.add_argument("-gps", "--genetic-population-steps",
+                                           type=int,
+                                           default=20,
+                                           help=ProgramArgumentsConfiguration.SUBSTITUTE_STEPS_DESCRIPTION)
+
+    genetic_population_parser.set_defaults(population_generator=
+                                           ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR)
 
     parser.add_argument('-t', '--target',
                         required=True,
@@ -37,6 +43,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--steps',
                         required=False,
                         type=int,
+                        default=50,
                         help=ProgramArgumentsConfiguration.STEPS_DESCRIPTION)
 
     parser.add_argument('--population-size',
@@ -72,6 +79,10 @@ if __name__ == '__main__':
                         type=ProgramArgumentsConfiguration.gtsrb_path,
                         help=ProgramArgumentsConfiguration.RANDOM_SELECT_RATE_DESCRIPTION)
 
+    parser.add_argument('-o', '--out',
+                        required=False,
+                        type=str,
+                        help=ProgramArgumentsConfiguration.OUT_PATH_DESCRIPTION)
 
     population_generator_group = parser.add_argument_group('Population Generator',
                                                            ProgramArgumentsConfiguration.POPULATION_GENERATOR_DESCRIPTION)
@@ -79,7 +90,6 @@ if __name__ == '__main__':
     group.add_argument('--rand', action='store_true')
     group.add_argument('--color', action='store_true')
     group.add_argument('--sample', action='store_true')
-    group.add_argument('--genetic', action='store_true')
     group.add_argument('--brute-force', action='store_true')
     group.add_argument('--circle', action='store_true')
     group.add_argument('--polygon', action='store_true')
@@ -88,98 +98,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    classifier = OnlineClassifier()
-    class_id, class_name = ProgramArgumentsConfiguration.get_class(args.target)
+    print_info("Initializing the genetic algorithm")
 
+    classifier = ClassifierMock()
+    class_id, class_name, population_generator, mutation_function, algorithm = \
+        ProgramArgumentUtilities.get_population_generator_from_args(args=args, classifier=classifier)
 
-    mutation_function = None #Will be set if necessary
-
-    image_path = args.gtsrb_image_path
-    size = args.population_size
-
-    if args.color:
-        population_generator = TrainColorPopulationGenerator(size=size,
-                                                             target_class=class_id,
-                                                             image_dir=image_path)
-    elif args.rand:
-        population_generator = RandomPopulationGenerator(size=size)
-    elif args.sample:
-        population_generator = SampleImagesRearrangePopulationGenerator(size=size,
-                                                                        target_class=class_id,
-                                                                        image_dir=image_path)
-    elif args.genetic:
-        population_generator = GeneticPopulationGenerator(size=size,
-                                                          class_id=class_id,
-                                                          steps=50,
-                                                          population_generator=
-                                                          SampleImagesRearrangePopulationGenerator(size=100,
-                                                                                                   target_class=class_id,
-                                                                                                   image_dir=image_path)
-                                                          )
-    elif args.brute_force:
-        population_generator = RandomBruteForcePopulationGenerator(size=size,
-                                                                   classifier=classifier,
-                                                                   target_class=class_name)
-    elif args.circle:
-        population_generator = GeneticPopulationGenerator(size=size,
-                                                          class_id=class_id,
-                                                          steps=30,
-                                                          population_generator=CirclePopulationGenerator(100),
-                                                          algorithm=GeometricGeneticAlgorithm,
-                                                          mutation_intensity=0.05,
-                                                          mutation_function=GeometricMutations.mutate_circle_function())
-        mutation_function=GeometricMutations.mutate_circle_function()
-    elif args.polygon:
-        population_generator = GeneticPopulationGenerator(size=size,
-                                                          class_id=class_id,
-                                                          steps=20,
-                                                          population_generator=PolygonPopulationGenerator(100),
-                                                          algorithm=GeometricGeneticAlgorithm,
-                                                          mutation_intensity=0.05,
-                                                          mutation_function=GeometricMutations.mutate_polygon_function(
-                                                              n=3))
-        mutation_function=GeometricMutations.mutate_polygon_function(n=3)
-    elif args.gilogo:
-        image = Image.open("gi-logo.jpg")
-        inverted_image = PIL.ImageOps.invert(image)
-        image = inverted_image.convert("1")
-        square_size = 5
-        population_generator = GeneticPopulationGenerator(size=size,
-                                                          class_id=class_id,
-                                                          steps=20,
-                                                          population_generator=BitmapPopulationGenerator(100,
-                                                                                                         image,
-                                                                                                         num_horizontal=square_size,
-                                                                                                         num_vertical=square_size),
-                                                          algorithm=GeometricGeneticAlgorithm,
-                                                          mutation_intensity=0.05,
-                                                          mutation_function=GeometricMutations.mutate_bitmap_function(
-                                                              img=image, num_horizontal=square_size,
-                                                              num_vertical=square_size))
-
-        mutation_function=GeometricMutations.mutate_bitmap_function(img=image)
-
-    elif args.tiles:
-        #TODO: DIESE COLORS RANDOM
-        color1 = (255, 224, 130)
-        color2 = (255, 160, 0)
-
-        mutation_function = GeometricMutations.mutate_tile_function(color1, color2)
-        population_generator = GeneticPopulationGenerator(size=size,
-                                                          class_id=class_id,
-                                                          steps=20,
-                                                          population_generator=TilePopulationGenerator(100,
-                                                                                                       color1=color1,
-                                                                                                       color2=color2),
-                                                          algorithm=GeometricGeneticAlgorithm,
-                                                          mutation_intensity=0.05,
-                                                          mutation_function=mutation_function)
-    else:
-        population_generator = PopulationGenerator(size=size)
-
-    print()
-
-    if args.circle or args.polygon or args.gilogo or args.tiles:
+    if algorithm == GeometricGeneticAlgorithm:
         genetic = GeometricGeneticAlgorithm(classifier=classifier,
                                             class_to_optimize=class_name,
                                             retain_rate=args.retain_rate,
@@ -196,9 +121,33 @@ if __name__ == '__main__':
                                    mutation_intensity=args.mutation_intensity,
                                    random_select_rate=args.random_select_rate)
 
-    population, _ = genetic.run(initial_population_generator=population_generator,
-                                grade_limit=args.confidence,
-                                steps=100)
+    try:
+        print_info("The genetic algorithm will be executed with the following configurations")
+        print_variable("Algorithm", make_bold(genetic.__repr__()))
+        print_variable("Output Directory", "Standard" if args.out is None else args.out)
+        print_variable("Class ID", str(class_id))
+        print_variable("Class Name", class_name)
+        print_variable("Population Size", str(population_generator.size))
+        print_variable("Population Generator", str(population_generator))
+        print_variable("Stop with Confidence", "Unlimited" if args.confidence > 1.0 else str(args.confidence))
+        print_variable("Maximum Steps", str(args.steps))
+        print_variable("Retain Rate", str(args.retain_rate))
+        print_variable("Mutation Rate", str(args.mutation_rate))
+        print_variable("Mutation Intensity", str(args.mutation_intensity))
+        print_variable("Random Select Rate", str(args.random_select_rate))
 
-    best = max(population, key=lambda individual: individual.classification.value_for_class(class_name=class_name))
-    best.image.save("tmp/best_" + str(class_id) + '.png')
+        print_space()
+
+        population, _ = genetic.run(initial_population_generator=population_generator,
+                                    grade_limit=args.confidence,
+                                    steps=args.steps)
+
+        best = max(population, key=lambda individual: individual.classification.value_for_class(class_name=class_name))
+        best_file_name = "best_" + str(class_id) + '.png'
+        best_complete_path = os.path.join(genetic.output_dir, best_file_name)
+        best.image.save(best_complete_path)
+
+        print_info("Saved the best individual with confidence %f%% to %s" % (best.classification.value_for_class(class_name=class_name)*100, best_complete_path))
+
+    except KeyboardInterrupt:
+        print_error("\nComputation terminated by user")

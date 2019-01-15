@@ -1,10 +1,11 @@
-from PIL import Image
 from typing import List
 
-from config.geometric_individual_configuration import GeometricIndividualConfiguration
-from genetic.image_individual import ImageIndividual
-from genetic.geometric.geometric_objects import GeometricObject
+from PIL import Image
+
 from config.classifier_configuration import ClassifierConfiguration
+from config.geometric_individual_configuration import GeometricIndividualConfiguration
+from genetic.geometric.geometric_objects import GeometricObject
+from genetic.image_individual import ImageIndividual
 
 
 class GeometricIndividual(ImageIndividual):

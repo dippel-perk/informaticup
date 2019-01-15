@@ -1,10 +1,12 @@
 import string
-from typing import List, Sized
+from typing import List
+
 
 class Class:
     """
     Stores the confidence result for a certain class.
     """
+
     def __init__(self, name: string, confidence: string):
         self.name = name
         self.confidence = float(confidence)
@@ -12,10 +14,12 @@ class Class:
     def __repr__(self):
         return "%s %f" % (self.name, self.confidence)
 
+
 class ImageClassification():
     """
     Stores the classification result for a certain image.
     """
+
     def __init__(self, classes: List[Class]):
         self.classes = classes
 

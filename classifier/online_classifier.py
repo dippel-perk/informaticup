@@ -1,26 +1,25 @@
-import time
-import requests
 import os
-
-from PIL.Image import Image
+import time
 from json import JSONDecodeError
 from typing import List
-from utils.output_utilities import print_error, print_debug,print_countdown
-from classifier.classifier import Classifier
+
+import requests
+from PIL.Image import Image
+
 from classifier.classification import ImageClassification, Class
-from utils.image_utilities import ImageUtilities
+from classifier.classifier import Classifier
 from config.classifier_configuration import OnlineClassifierConfiguration
+from utils.image_utilities import ImageUtilities
+from utils.output_utilities import print_error, print_debug, print_countdown
 
 
 class OnlineClassifier(Classifier):
-
     __API_RESPONSE_CODE_TOO_MANY_REQUESTS = 429
     __API_RESPONSE_CODE_BAD_REQUEST = 400
     __API_RESPONSE_CODE_SERVICE_UNAVAILABLE = 503
     __API_RESPONSE_CODE_UNAUTHORIZED = 401
 
     __API_RATE_LIMIT_INTERVAL = 60
-
 
     def __init__(self):
         self._time_start = 0

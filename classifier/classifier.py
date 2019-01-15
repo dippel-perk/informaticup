@@ -1,6 +1,9 @@
-from PIL.Image import Image
 from typing import List
+
+from PIL.Image import Image
+
 from classifier.classification import ImageClassification
+
 
 class Classifier:
     """

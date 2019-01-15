@@ -1,17 +1,20 @@
-from genetic.population_generator.random_population_generator import RandomPopulationGenerator
-from road_sign_class_mapper import RoadSignClassMapper
-from PIL import Image, ImageOps
 import os
-from collections import defaultdict, Counter
 import random as rd
+from collections import defaultdict, Counter
+
 import numpy as np
-from utils.image_utilities import ImageUtilities
+from PIL import Image, ImageOps
 from colorthief import ColorThief
+
+from config.train_color_population_generator_configuration import TrainColorPopulationGeneratorConfiguration
+from genetic.population_generator.random_population_generator import RandomPopulationGenerator
+from utils.image_utilities import ImageUtilities
 
 
 class TrainColorPopulationGenerator(RandomPopulationGenerator):
-
-    MAX_IMAGE_COUNT = 250
+    """
+    Generates a population with the same color distribution as some of the training images combined.
+    """
 
     def __init__(self, size: int, target_class: int, image_dir: str):
         super().__init__(size=size)
@@ -30,27 +33,22 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
             for color in thief.get_palette(color_count=5, quality=1):
                 color_distribution[color] += 1
 
-            if index >= TrainColorPopulationGenerator.MAX_IMAGE_COUNT:
+            if index >= TrainColorPopulationGeneratorConfiguration.MAX_IMAGE_COUNT:
                 break
 
-            #img = ImageOps.posterize(Image.open(os.path.join(directory, file)), 6).convert('RGB')
-            #colors = img.getcolors(img.size[0]*img.size[1])
-
-            #for count, color in colors:
-            #    color_distribution[color] += count
-
         self._colors, self._probabilities = zip(*color_distribution.items())
-
-        #print(color_distribution)
 
         total = sum(self._probabilities)
         self._probabilities = [x / total for x in self._probabilities]
 
-
-    def _generate_noise(self):
+    def _generate_noise(self) -> Image:
+        """
+        Generates an image with the desired color distribution.
+        :return: The image.
+        """
         img, pixel_count = ImageUtilities.get_empty_image()
 
-        pixel_indices =  list(np.random.choice(list(range(len(self._colors))), p=self._probabilities, size=pixel_count))
+        pixel_indices = list(np.random.choice(list(range(len(self._colors))), p=self._probabilities, size=pixel_count))
 
         counts = Counter(pixel_indices)
         pixel_indices = sorted(pixel_indices, key=counts.get, reverse=True)
@@ -58,11 +56,14 @@ class TrainColorPopulationGenerator(RandomPopulationGenerator):
         pixel_data = [self._colors[idx] for idx in pixel_indices]
         img.putdata(pixel_data)
 
-        #img.show()
-
         return img
 
-    def _get_pixel_value(self):
+    def _get_pixel_value(self) -> tuple:
+        """
+        Overwrites the get pixel value of the RandomPopulationGenerator. Chooses either a random color or one
+        with the desired color distribution.
+        :return:
+        """
         decision_val = rd.random()
         if decision_val < 0.2:
             return rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255)

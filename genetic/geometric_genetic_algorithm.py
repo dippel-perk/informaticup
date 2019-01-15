@@ -1,15 +1,18 @@
 import random as rd
 import string
+from typing import Callable
 
-from genetic.genetic_algorithm import GeneticAlgorithm
-from genetic.image_individual import ImageIndividual
 from classifier.classifier import Classifier
+from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.geometric.geometric_individual import GeometricIndividual
 from genetic.geometric.geometric_objects import GeometricObject
-from typing import Callable
+from genetic.image_individual import ImageIndividual
 
 
 class GeometricGeneticAlgorithm(GeneticAlgorithm):
+    """
+    Genetic algorithm modification so that the algorithm does work on geometric individuals.
+    """
 
     def __init__(self, classifier: Classifier, class_to_optimize: string,
                  mutation_function: Callable[[GeometricObject], GeometricObject], retain_rate: float = 0.2,
@@ -26,6 +29,13 @@ class GeometricGeneticAlgorithm(GeneticAlgorithm):
         self._mutation_callback = mutation_function
 
     def _crossover(self, male: GeometricIndividual, female: GeometricIndividual):
+        """
+        Performs a basic geometric crossover of two geometric individuals. With the probability mutation_rate the
+        child individual will get mutated as well.
+        :param male: The first individual
+        :param female: The second individual
+        :return: A crossed over child individual
+        """
         assert self._combinable(male, female)
         new_objects = []
 
@@ -49,7 +59,13 @@ class GeometricGeneticAlgorithm(GeneticAlgorithm):
         return child
 
     def _mutate(self, individual: ImageIndividual):
-
+        """
+        Mutates the given individual by changing a certain amount of geometric objects. The objects are mutated using
+        the mutation callback method of this object. The amount of objects is related to the mutation_intensity
+        attribute.
+        :param individual: The individual which should be mutated.
+        :return: The mutated individual.
+        """
         if individual.__class__ == GeometricIndividual:
             new_objects = individual.get_objects()
 
@@ -60,3 +76,6 @@ class GeometricGeneticAlgorithm(GeneticAlgorithm):
             return GeometricIndividual(new_objects)
         else:
             raise NotImplementedError
+
+    def __repr__(self):
+        return "Geometric Genetic Algorithm"

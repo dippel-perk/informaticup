@@ -5,25 +5,23 @@ import time
 import PIL.ImageOps
 import pandas as pd
 from PIL import Image
-from genetic.population_generator.bitmap_population_generator import BitmapPopulationGenerator
-from genetic.population_generator.polygon_population_generator import PolygonPopulationGenerator
-from genetic.population_generator.tile_population_generator import TilePopulationGenerator
 
-from classifier.classifier import Classifier
 from classifier.online_classifier import OnlineClassifier
+from config.classifier_configuration import ClassifierConfiguration
 from genetic.genetic_algorithm import GeneticAlgorithm
 from genetic.geometric.geometric_mutations import GeometricMutations
 from genetic.geometric_genetic_algorithm import GeometricGeneticAlgorithm
+from genetic.population_generator.bitmap_population_generator import BitmapPopulationGenerator
 from genetic.population_generator.circle_population_generator import CirclePopulationGenerator
+from genetic.population_generator.existing_population_generator import ExistingPopulationGenerator
 from genetic.population_generator.genetic_population_generator import GeneticPopulationGenerator
-from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
+from genetic.population_generator.polygon_population_generator import PolygonPopulationGenerator
 from genetic.population_generator.sample_images_rearrange_population_generator import \
     SampleImagesRearrangePopulationGenerator
-from road_sign_class_mapper import RoadSignClassMapper
+from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
+from genetic.population_generator.tile_population_generator import TilePopulationGenerator
 from utils.image_utilities import ImageUtilities
-from config.classifier_configuration import ClassifierConfiguration
-from genetic.population_generator.existing_population_generator import ExistingPopulationGenerator
-from genetic.population_generator.tile_population_generator import random_color_generator, interpolation_color_generator
+from utils.road_sign_class_mapper_utilities import RoadSignClassMapper
 
 if __name__ == '__main__':
 
@@ -124,7 +122,8 @@ if __name__ == '__main__':
             image = inverted_image
 
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
-                                                              population_generator=SingleImagePopulationGenerator(genetic_size, image),
+                                                              population_generator=SingleImagePopulationGenerator(
+                                                                  genetic_size, image),
                                                               algorithm=GeneticAlgorithm,
                                                               mutation_intensity=mutation_intensity,
                                                               pixel_mutation_function=ImageUtilities.mutate_non_dark_pixels)

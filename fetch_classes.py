@@ -1,10 +1,13 @@
-from classifier.online_classifier import OnlineClassifier
-from PIL import Image, ImageOps
+import os
+import random
+
 import pandas as pd
-from utils.image_utilities import ImageUtilities
-import os, random
-from road_sign_class_mapper import RoadSignClassMapper
+from PIL import Image, ImageOps
+
+from classifier.online_classifier import OnlineClassifier
 from config.classifier_configuration import ClassifierConfiguration
+from utils.image_utilities import ImageUtilities
+from utils.road_sign_class_mapper_utilities import RoadSignClassMapper
 
 image_path = '../GTSRB/Final_Training/Images'
 data = []
