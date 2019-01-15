@@ -65,7 +65,7 @@ main.py [-h]  -t TARGET
                {substitute} ...
 ```
 
-When adding the substitute command at the **end** of the arguments you will have two additional parameters
+When adding the substitute command at the **end** of the arguments, you will have two additional parameters
 
 ```
 main.py [...] substitute
@@ -86,7 +86,7 @@ The target class name or target class id.
 * `--random-select-rate` The percentage of individuals which should be randomly added to the next generation.
 * `--gtsrb-image-path` The path to the German Traffic Sign Recognition Benchmark. The images of the benchmark are used in some population generators.
 * `--image` A path to a .jpg or .jpeg image. The file will be used for the grid image or single image population generators. The background must be black and the foreground should be white.
-* `--out` A complete history of all computed generations will be saved to an output directory. If no directory is provided, a standard directory is chosen.
+* `--out` A complete history of all computed generations will be saved to an output directory. If none is provided, a standard directory is chosen.
 * What follows are the available population generators. The population generator might have influence on the mutation and crossover function. At least one population generator has to be chosen from the set of possibilities.
   * `--rand` Generates a population of random image individuals.
   * `--color` Generates a population with the same color distribution as some random training images.
@@ -100,7 +100,7 @@ The target class name or target class id.
 
 If the substitute command was added, the selected population generator will be the initial population generator for the substitute network. The tool will evolve this population to a state where the substitute network classifies the individuals to be most likely in the target class. The `substitute` has to be added **after** the arguments above. If added, the user has two additional arguments.
 
-1. `-spn --substitute-population-size` The population size which should be used by the substitute network. The size has to be larger than `--population-size` *n*, because we want to use the most fit *n* individuals of the substitute network as an initial population of the genetic algorithm. If the variable is not set, we use the size 3*n*.
+1. `-spn --substitute-population-size` The population size which should be used by the substitute network. The size has to be larger than `--population-size` *n*, because we want to use the fittest *n* individuals of the substitute network as an initial population of the genetic algorithm. If the variable is not set, we use the size 3*n*.
 1. `-sps --substitute-population-steps` Determines the amount of steps (i.e. generations), which should be computed by the genetic algorithm on the substitute network.
 
 ### Help
