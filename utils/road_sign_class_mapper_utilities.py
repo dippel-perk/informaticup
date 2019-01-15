@@ -21,8 +21,9 @@ class RoadSignClassMapperUtilities:
         """
         result_df = RoadSignClassMapperUtilities._NAME_CLASS_DATAFRAME[
             RoadSignClassMapperUtilities._NAME_CLASS_DATAFRAME[RoadSignMapperConfiguration.LABEL_SIGN_NAME] == name]
+
         if result_df.shape[0] == 1:
-            return result_df.iloc[0][RoadSignClassMapperUtilities]
+            return result_df.iloc[0][RoadSignMapperConfiguration.LABEL_CLASS_ID]
         else:
             raise ValueError('Name: {} not found'.format(name))
 

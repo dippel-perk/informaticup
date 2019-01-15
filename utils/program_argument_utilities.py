@@ -63,6 +63,7 @@ class ProgramArgumentUtilities:
             if args.substitute_population_size is None:
                 size = args.population_size * 3
             else:
+                assert args.substitute_population_size >= args.population_size
                 size = args.substitute_population_size
 
         else:
@@ -72,16 +73,24 @@ class ProgramArgumentUtilities:
             population_generator = TrainColorPopulationGenerator(size=size,
                                                                  target_class=class_id,
                                                                  image_dir=image_path)
+            mutation_function = ImageUtilities.mutate_pixels
         elif args.rand:
             population_generator = RandomPopulationGenerator(size=size)
+            mutation_function = ImageUtilities.mutate_pixels
         elif args.sample:
             population_generator = SampleImagesRearrangePopulationGenerator(size=size,
                                                                             target_class=class_id,
                                                                             image_dir=image_path)
+            mutation_function = ImageUtilities.mutate_pixels
         elif args.brute_force:
+
+            if args.population_generator == ProgramArgumentUtilitiesConfiguration.GENETIC_POPULATION_GENERATOR:
+                print_error("It makes no sense to execute the brute force generator (which forces online classification) with the substitute network.")
+                exit()
             population_generator = RandomBruteForcePopulationGenerator(size=size,
                                                                        classifier=classifier,
                                                                        target_class=class_name)
+            mutation_function = ImageUtilities.mutate_pixels
         elif args.circle:
             population_generator = CirclePopulationGenerator(size=size)
             genetic_algorithm = GeometricGeneticAlgorithm

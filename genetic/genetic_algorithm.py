@@ -264,7 +264,18 @@ class GeneticAlgorithm:
 
         needed_steps = steps
 
-        for i in range(1, steps + 1):
+        if self._save_history:
+            self._save_generation(step=1)
+
+        if verbose:
+            print("[%s] generation with grade: %f%%" % (str(1).zfill(3), self._get_latest_grade()))
+
+        for i in range(2, steps + 1):
+
+            self._evolve()
+
+            if on_generation_evolved is not None:
+                on_generation_evolved()
 
             if self._save_history:
                 self._save_generation(step=i)
@@ -279,11 +290,6 @@ class GeneticAlgorithm:
 
                 needed_steps = i
                 break
-
-            self._evolve()
-
-            if on_generation_evolved is not None:
-                on_generation_evolved()
 
         if verbose:
             print_success("Finished on generation %d with grade %f%%" % (needed_steps, self._get_latest_grade()))

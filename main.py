@@ -1,7 +1,7 @@
 import argparse
 import os
 
-from classifier.classifer_mock import ClassifierMock
+from classifier.online_classifier import OnlineClassifier
 from config.program_argument_configuration import ProgramArgumentsConfiguration
 from config.program_argument_utilities_configuration import ProgramArgumentUtilitiesConfiguration
 from genetic.genetic_algorithm import GeneticAlgorithm
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     print_info("Initializing the genetic algorithm")
 
-    classifier = ClassifierMock()
+    classifier = OnlineClassifier()
     class_id, class_name, population_generator, mutation_function, algorithm = \
         ProgramArgumentUtilities.get_population_generator_from_args(args=args, classifier=classifier)
 

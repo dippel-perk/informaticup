@@ -44,6 +44,16 @@ What follows is an example output of the command above.
 
 ![Example Output](resources/figures/example_output.png)
 
+You can use the target class name instead of the class id like follows.
+```
+python main.py -t "Zulässige Höchstgeschwindigkeit (30)" --rand
+```
+
+Note that using `--rand` population generator will most likely not result in high confidence results. Try adding `substitute` to initially compute a good population on the substitute network.
+
+```
+python main.py -t "Zulässige Höchstgeschwindigkeit (30)" --rand substitute
+```
 
 
 ## Usage

@@ -30,7 +30,7 @@ class ProgramArgumentsConfiguration:
                                        "At least one population generator has to be chosen from the set of possibilities."
 
     OUT_PATH_DESCRIPTION = "A complete history of all computed generations will be saved to an output directory. " \
-                           "If no directory is provided, a standard directory is chosen."
+                           "If none is provided, a standard directory is chosen."
 
     SUBSTITUTE_DESCRIPTION = "If the substitute command was added, the selected population generator will be the initial " \
                              "population generator for the substitute network. The tool will evolve this population to " \
@@ -75,6 +75,7 @@ class ProgramArgumentsConfiguration:
         :param x: The input string.
         :return: A validated class id or class name.
         """
+        x = str(x)
         try:
             if x.isdigit():
                 class_id = int(x)

@@ -65,6 +65,8 @@ class GeneticPopulationGenerator(PopulationGenerator):
         def on_generation_evolved():
             self._progress_bar_step()
 
+        self._progress_bar_step()
+
         population, _ = genetic.run(initial_population_generator=self._population_generator,
                                     steps=self._steps,
                                     verbose=False,
