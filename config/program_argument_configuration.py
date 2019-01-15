@@ -21,6 +21,10 @@ class ProgramArgumentsConfiguration:
 
     GTSRB_IMAGE_PATH_DESCRIPTION = "The path to the German Traffic Sign Recognition Benchmark. The images of the " \
                                    "benchmark are used in some population generators."
+
+    IMAGE_PATH_DESCRIPTION = "A path to a jpg or jpeg image. The file will be used for the grid image or single image " \
+                             "population generators. The background must be black and the foreground must be white. "
+
     POPULATION_GENERATOR_DESCRIPTION = "Determines the population generator, which should be used. The population " \
                                        "generator might have influence on the mutation and crossover function. " \
                                        "At least one population generator has to be chosen from the set of possibilities."
@@ -47,10 +51,10 @@ class ProgramArgumentsConfiguration:
     BRUTE_FORCE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of random image individuals, while ensuring that each individual's classification contains the target class. To achieve this, new images are generated until the target class is part of the classification."
     CIRCLE_POPULATION_GENERATOR_DESCRIPTION = "Generates population of geometric individuals, which are filled with random circles."
     POLYGON_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of geometric individuals which contain random polygons. We restricted the polygons to be triangles."
-    GILOGO_POPULATION_GENERATOR_DESCRIPTION = ""
     TILE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population with geometric individuals. Every individual is completely filled with so called tiles."
-    SNOWFLAKE_POPULATION_GENERATOR_DESCRIPTION =""
-    BATMAN_POPULATION_GENERATOR_DESCRIPTION =""
+
+    GRID_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of the given image on a grid with different color."
+    SINGLE_IMAGE_POPULATION_GENERATOR_DESCRIPTION = "Generates a population of the given image filled with random pixels."
 
     @staticmethod
     def percentage_float(x):
@@ -98,4 +102,21 @@ class ProgramArgumentsConfiguration:
         x = str(x)
         if not os.path.isdir(x):
             raise argparse.ArgumentTypeError("%r is not a valid directory" % (x,))
+        return x
+
+    @staticmethod
+    def image_file(x):
+        """
+        Validates that a certain file is a valid image file.
+        :param x: The input file.
+        :return: The validated image path.
+        """
+        if x is None:
+            return x
+
+        x = str(x)
+        if not os.path.isfile(x):
+            raise argparse.ArgumentTypeError("%r is not a file" % (x,))
+        if not x.endswith(".jpg") and not x.endswith(".jpeg"):
+            raise argparse.ArgumentTypeError("%r is not a jpg or jpeg file" % (x,))
         return x
