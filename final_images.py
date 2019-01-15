@@ -116,7 +116,7 @@ if __name__ == '__main__':
                                                 mutation_intensity=mutation_intensity,
                                                 mutation_function=GeometricMutations.mutate_bitmap_function(img=image))
         elif method == 'apple':
-            image = Image.open("images/apple5.jpg")
+            image = Image.open("apple.jpg")
             population_generator = GeneticPopulationGenerator(size=size, class_id=class_id, steps=args.pre_steps,
                                                               population_generator=SingleImagePopulationGenerator(
                                                                   genetic_size, image),
