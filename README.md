@@ -37,20 +37,30 @@ python main.py -t 2 -s 20 --circle --out result substitute
 The same command can be executed with a confidence limit. The genetic algorithm will terminate when the confidence limit of 99% is reached.
 
 ```
-python3 main.py -t 2 -c 0.99 -s 20 --circle --out result substitute
+python main.py -t 2 -c 0.99 -s 20 --circle --out result substitute
 ```
+
+What follows is an example output of the command above.
+
+![Example Output](resources/figures/example_output.png)
+
+
 
 ## Usage
 
 The program can be executed with the following command `python main.py`. There are several arguments which can be passed to change the behavior of the algorithm.
 
 ```
-main.py [-h] -t TARGET [-c CONFIDENCE] [-s STEPS]
-               [--population-size POPULATION_SIZE] [--retain-rate RETAIN_RATE]
-               [--mutation-rate MUTATION_RATE]
-               [--mutation-intensity MUTATION_INTENSITY]
-               [--random-select-rate RANDOM_SELECT_RATE]
-               [--gtsrb-image-path GTSRB_IMAGE_PATH] [--image IMAGE] [-o OUT]
+main.py [-h]  -t TARGET
+              [-c CONFIDENCE]
+              [-s STEPS]
+              [--population-size POPULATION_SIZE]
+              [--retain-rate RETAIN_RATE]
+              [--mutation-rate MUTATION_RATE]
+              [--mutation-intensity MUTATION_INTENSITY]
+              [--random-select-rate RANDOM_SELECT_RATE]
+              [--gtsrb-image-path GTSRB_IMAGE_PATH] [--image IMAGE]
+              [-o OUT]
                (--rand | --color | --sample | --brute-force | --circle | --polygon | --image-grid | --single-image | --tiles)
                {substitute} ...
 ```
@@ -58,8 +68,10 @@ main.py [-h] -t TARGET [-c CONFIDENCE] [-s STEPS]
 When adding the substitute command at the **end** of the arguments you will have two additional parameters
 
 ```
-main.py [...] substitute [-h] [-spn SUBSTITUTE_POPULATION_SIZE]
-                          [-sps SUBSTITUTE_POPULATION_STEPS]
+main.py [...] substitute
+                [-h]
+                [-spn SUBSTITUTE_POPULATION_SIZE]
+                [-sps SUBSTITUTE_POPULATION_STEPS]
 ```
 
 ### Arguments
