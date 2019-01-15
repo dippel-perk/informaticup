@@ -34,3 +34,6 @@ class SingleImagePopulationGenerator(PopulationGenerator):
             img.putdata(data)
             yield ImageIndividual(image=img)
             self._progress_bar_step()
+
+    def __repr__(self):
+        return "Single Image Population Generator"

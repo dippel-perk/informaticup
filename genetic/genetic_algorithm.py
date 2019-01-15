@@ -39,6 +39,9 @@ class GeneticAlgorithm:
         if save_generations:
             if output_dir is None:
                 self._output_dir = os.path.join('tmp', 'output', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            else:
+                self._output_dir = output_dir
+
             pathlib.Path(self._output_dir).mkdir(parents=True, exist_ok=True)
             with open(os.path.join(self._output_dir, 'config.txt'), 'w+') as f:
                 for name, val in saved_args.items():
@@ -255,8 +258,8 @@ class GeneticAlgorithm:
         self._initialize_with_population([individual for individual in initial_population_generator])
 
         if verbose:
-            print_success("Initial population generated successful.")
             initial_population_progress_bar.close()
+            print_success("Initial population generated successful.")
             print_info("Starting the evolution process")
 
         needed_steps = steps

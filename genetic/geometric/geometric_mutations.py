@@ -69,6 +69,27 @@ class GeometricMutations:
         return mutate_bitmap
 
     @staticmethod
+    def mutate_bitmap_random_function(img: Image.Image, num_vertical=4, num_horizontal=4):
+        """
+        Generates a mutation function which generates the given image with a random color a random position.
+        :param img: The input image.
+        :return: The mutation function.
+        """
+
+        dimensions = GeometricIndividualConfiguration.IMAGE_DIMENSION
+        width = dimensions[0]
+        height = dimensions[1]
+
+        img = img.resize((int(width / num_horizontal), int(height / num_vertical)))
+
+        def mutate_bitmap(object: GeometricObject):
+            color = (rd.randint(0, 255), rd.randint(0, 255), rd.randint(0, 255))
+            bitmap = Bitmap(img=img, x=rd.randint(0, width), y=rd.randint(0, height), color=color)
+            return bitmap
+
+        return mutate_bitmap
+
+    @staticmethod
     def mutate_tile_function(color1=(255, 82, 82), color2=(255, 255, 255), interpolation=True):
         """
         Generates a mutation function which assigns a random color to the given tile.

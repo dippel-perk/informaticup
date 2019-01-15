@@ -15,6 +15,8 @@ from genetic.population_generator.sample_images_rearrange_population_generator i
     SampleImagesRearrangePopulationGenerator
 from genetic.population_generator.tile_population_generator import TilePopulationGenerator
 from genetic.population_generator.train_color_population_generator import TrainColorPopulationGenerator
+from genetic.population_generator.single_image_population_generator import SingleImagePopulationGenerator
+from utils.image_utilities import ImageUtilities
 from utils.road_sign_class_mapper_utilities import RoadSignClassMapperUtilities
 
 
@@ -100,13 +102,38 @@ class ProgramArgumentUtilities:
             population_generator = BitmapPopulationGenerator(size=size,
                                                              img=image,
                                                              num_horizontal=square_size,
-                                                             num_vertical=square_size),
+                                                             num_vertical=square_size)
 
             genetic_algorithm = GeometricGeneticAlgorithm
 
             mutation_function = GeometricMutations.mutate_bitmap_function(img=image,
                                                                           num_horizontal=square_size,
                                                                           num_vertical=square_size)
+            genetic_population_generator_mutation_intensity = 0.05
+
+        elif args.snowflake:
+            image = Image.open("resources/snowflake.jpeg")
+            inverted_image = ImageOps.invert(image)
+            image = inverted_image.convert("1")
+            square_size = 5
+            population_generator = BitmapPopulationGenerator(size=size,
+                                                             img=image,
+                                                             num_horizontal=square_size,
+                                                             num_vertical=square_size)
+
+            genetic_algorithm = GeometricGeneticAlgorithm
+
+            mutation_function = GeometricMutations.mutate_bitmap_random_function(img=image,
+                                                                          num_horizontal=square_size,
+                                                                          num_vertical=square_size)
+            genetic_population_generator_mutation_intensity = 0.05
+
+        elif args.batman:
+            image = Image.open("resources/gi-logo.jpg")
+            population_generator = SingleImagePopulationGenerator(size=size, img=image)
+
+
+            mutation_function =  ImageUtilities.mutate_non_dark_pixels
             genetic_population_generator_mutation_intensity = 0.05
 
         elif args.tiles:

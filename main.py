@@ -87,14 +87,38 @@ if __name__ == '__main__':
     population_generator_group = parser.add_argument_group('Population Generator',
                                                            ProgramArgumentsConfiguration.POPULATION_GENERATOR_DESCRIPTION)
     group = population_generator_group.add_mutually_exclusive_group(required=True)
-    group.add_argument('--rand', action='store_true')
-    group.add_argument('--color', action='store_true')
-    group.add_argument('--sample', action='store_true')
-    group.add_argument('--brute-force', action='store_true')
-    group.add_argument('--circle', action='store_true')
-    group.add_argument('--polygon', action='store_true')
-    group.add_argument('--gilogo', action='store_true')
-    group.add_argument('--tiles', action='store_true')
+    group.add_argument('--rand',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.RAND_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--color',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.COLOR_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--sample',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.SAMPLE_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--brute-force',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.BRUTE_FORCE_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--circle',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.CIRCLE_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--polygon',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.POLYGON_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--gilogo',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.GILOGO_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--tiles',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.TILE_POPULATION_GENERATOR_DESCRIPTION)
+    group.add_argument('--snowflake',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.SNOWFLAKE_POPULATION_GENERATOR_DESCRIPTION)
+
+    group.add_argument('--batman',
+                       action='store_true',
+                       help=ProgramArgumentsConfiguration.BATMAN_POPULATION_GENERATOR_DESCRIPTION)
+
 
     args = parser.parse_args()
 
@@ -111,7 +135,8 @@ if __name__ == '__main__':
                                             mutation_rate=args.mutation_rate,
                                             mutation_intensity=args.mutation_intensity,
                                             random_select_rate=args.random_select_rate,
-                                            mutation_function=mutation_function
+                                            mutation_function=mutation_function,
+                                            output_dir=args.out
                                             )
     else:
         genetic = GeneticAlgorithm(classifier=classifier,
@@ -119,7 +144,8 @@ if __name__ == '__main__':
                                    retain_rate=args.retain_rate,
                                    mutation_rate=args.mutation_rate,
                                    mutation_intensity=args.mutation_intensity,
-                                   random_select_rate=args.random_select_rate)
+                                   random_select_rate=args.random_select_rate,
+                                   output_dir=args.out)
 
     try:
         print_info("The genetic algorithm will be executed with the following configurations")

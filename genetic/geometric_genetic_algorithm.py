@@ -23,7 +23,8 @@ class GeometricGeneticAlgorithm(GeneticAlgorithm):
                          retain_rate=retain_rate,
                          random_select_rate=random_select_rate,
                          mutation_rate=mutation_rate,
-                         mutation_intensity=mutation_intensity, save_generations=save_generations,
+                         mutation_intensity=mutation_intensity,
+                         save_generations=save_generations,
                          output_dir=output_dir)
 
         self._mutation_callback = mutation_function
