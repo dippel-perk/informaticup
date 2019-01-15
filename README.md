@@ -26,7 +26,7 @@ To change the `python` command you can place an alias into `~/.bashrc` or `~/.ba
 ```
 alias python=python3
 ```
-## Example
+## Examples
 
 The following command will compute an image for the target class with the id 2. The genetic algorithm will use the substitute network results as its initial population. The substitute network will use a random circle generator as its initial population. The genetic algorithm will terminate after 20 steps and save its output to the `result` directory.
 
@@ -54,7 +54,15 @@ Note that using `--rand` population generator will most likely not result in hig
 ```
 python main.py -t "Zulässige Höchstgeschwindigkeit (30)" --rand substitute
 ```
+We suggest the user to use the substitute network and run the algorithm with the standard parameters. You can change arguments like the mutation intensity afterwards. In general the geometric genetic performs slightly better. You will most likely obtain good results using commands like.
 
+```
+python main.py -t 2 --polygon substitute
+python main.py -t 3 --circle substitute
+python main.py -t 8 --tiles substitute
+```
+
+You can always terminate the algorithm by using `cmd + c`. The results you generated so far will be in the defined output directory (or default `tmp/output/`).
 
 ## Usage
 

@@ -63,6 +63,9 @@ class ProgramArgumentUtilities:
             if args.substitute_population_size is None:
                 size = args.population_size * 3
             else:
+                if args.substitute_population_size < args.population_size:
+                    print_error("It makes no sense that the substitute network has a smaller population than the online network.")
+                    exit()
                 assert args.substitute_population_size >= args.population_size
                 size = args.substitute_population_size
 

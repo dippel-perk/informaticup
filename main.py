@@ -165,6 +165,7 @@ if __name__ == '__main__':
         print_variable("Mutation Rate", str(args.mutation_rate))
         print_variable("Mutation Intensity", str(args.mutation_intensity))
         print_variable("Random Select Rate", str(args.random_select_rate))
+        print_variable("Image File (if necessary)", str(args.image))
 
         print_space()
 
